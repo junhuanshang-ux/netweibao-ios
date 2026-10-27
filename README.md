@@ -8,7 +8,7 @@
   <img src="https://github.com/junhuanshang-ux/netweibao-ios/actions/workflows/build-ipa.yml/badge.svg" alt="Build unsigned IPA">
 </p>
 
-面向现场网络工程师的 iPhone 诊断工具箱。当前版本已完成 **Ping（单机 / 网段 / 批量）** 与 **DHCP 服务器检测**，其余模块按顺序接入。
+面向现场网络工程师的 iPhone 诊断工具箱。当前版本已完成 **Ping（单机 / 网段 / 批量）**、**DHCP 服务器检测**，以及**环路 / 风暴启发式检测**，其余模块按顺序接入。
 
 > 工程是原生 SwiftUI，最低 iOS 16.0。所有网络探测均使用 Apple 公开 API，不包含私有 API、越狱依赖或第三方统计 SDK。
 
@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`86a4c22c6286fbc775916f820d69233e9b2ec018df8ca10227b268cefebed32d`
+- SHA-256：`ba1f3a9ee1d59518b394a136ba9bb44b7fee97774f7470af96f50a261d67a73d`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -42,8 +42,8 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 | 1 | Ping（单机 / 网段 / 批量） | ✅ 已完成 |
 | 2 | DHCP 服务器检测 | ✅ 已完成（待真机验证 UDP 68） |
 | 3 | 路由追踪 | ⏳ 待开发 |
-| 4 | 环路检测 | ⏳ 待开发 |
-| 5 | 网络风暴检测 | ⏳ 待开发（受 iOS 抓包权限限制） |
+| 4 | 环路检测 | ✅ 已完成（启发式，受 iOS 限制） |
+| 5 | 网络风暴检测 | ✅ 已完成（链路质量代理，受 iOS 限制） |
 | 6 | WiFi 分析 | ⏳ 待开发（仅当前连接） |
 | 7 | 子网计算 | ⏳ 待开发（核心算法已就绪） |
 | 8 | 内外网测速 | ⏳ 待开发 |
@@ -62,6 +62,13 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - 同时发现多台 DHCP 服务器；按服务器标识去重。
 - 优先绑定 UDP 68；失败时回退临时端口，并在界面明确提示“结果可能不完整”。
 - 支持本网段广播与 `255.255.255.255` 双目标发送。
+
+### 环路 / 风暴已实现
+
+- **环路检测**：网关基线采样 → 8 个低强度广播 Echo → 网关复测；检测同源同序号重复 Echo Reply，并结合丢包、延迟、抖动给出“未发现 / 疑似 / 无法判断”。
+- **风暴检测**：比较低强度广播探测前后的网关丢包、延迟、抖动，并统计重复回复，识别疑似广播风暴或链路拥塞。
+- 两个模块都明确标注为**启发式 / 代理指标**，不会输出“确认环路”或“确认风暴”的虚假结论。
+- 受 iOS 限制，无法读取交换机 MAC/STP，也无法抓包；真正的二层定位仍需交换机命令、端口镜像或探针。
 
 ---
 
@@ -176,3 +183,5 @@ docs/
 ## 下一步
 
 按顺序实现 **路由追踪**：IPv4 逐跳 TTL 探测、每跳延迟、超时与路径异常标记。先在真机上验证 iOS 对 ICMP Time Exceeded 的可见性；如果系统只返回有限错误，会明确标注为“不完整路径”，不伪造跳点。
+
+之后再按顺序做 WiFi 分析、子网计算、内外网测速。
