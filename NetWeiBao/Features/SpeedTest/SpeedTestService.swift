@@ -47,6 +47,30 @@ final class SpeedTestService: @unchecked Sendable {
         node: SpeedTestNode,
         megabytes: Int = 100
     ) async throws -> SpeedTestTransfer {
+        let total = max(1, megabytes)
+        let perRequest = min(
+            total,
+            max(1, node.maxDownloadMegabytesPerRequest ?? total)
+        )
+        let startedAt = DispatchTime.now().uptimeNanoseconds
+        var remaining = total
+        var bytes = 0
+
+        while remaining > 0 {
+            try Task.checkCancellation()
+            let current = min(remaining, perRequest)
+            bytes += try await downloadOnce(node: node, megabytes: current)
+            remaining -= current
+        }
+
+        guard bytes > 0 else { throw SpeedTestError.emptyTransfer }
+        return makeTransfer(bytes: bytes, startedAt: startedAt)
+    }
+
+    private func downloadOnce(
+        node: SpeedTestNode,
+        megabytes: Int
+    ) async throws -> Int {
         let size = max(1, megabytes)
         let url = try makeURL(
             node: node,
@@ -70,7 +94,6 @@ final class SpeedTestService: @unchecked Sendable {
         let request = makeRequest(url: url, node: node, method: "GET", contentLength: nil)
         try await send(request, on: connection, isComplete: true)
 
-        let startedAt = DispatchTime.now().uptimeNanoseconds
         let response = try await readHeaders(on: connection)
         try validate(status: response.status)
 
@@ -84,13 +107,36 @@ final class SpeedTestService: @unchecked Sendable {
         }
 
         guard bodyBytes > 0 else { throw SpeedTestError.emptyTransfer }
-        return makeTransfer(bytes: bodyBytes, startedAt: startedAt)
+        return bodyBytes
     }
 
     func upload(
         node: SpeedTestNode,
         megabytes: Int = 50
     ) async throws -> SpeedTestTransfer {
+        let total = max(1, megabytes)
+        let perRequest = min(
+            total,
+            max(1, node.maxUploadMegabytesPerRequest ?? total)
+        )
+        let startedAt = DispatchTime.now().uptimeNanoseconds
+        var remaining = total
+        var bytes = 0
+
+        while remaining > 0 {
+            try Task.checkCancellation()
+            let current = min(remaining, perRequest)
+            bytes += try await uploadOnce(node: node, megabytes: current)
+            remaining -= current
+        }
+
+        return makeTransfer(bytes: bytes, startedAt: startedAt)
+    }
+
+    private func uploadOnce(
+        node: SpeedTestNode,
+        megabytes: Int
+    ) async throws -> Int {
         let size = max(1, megabytes)
         let url = try makeURL(node: node, path: node.uploadPath, query: [])
         let host = try connectionHost(for: url)
@@ -104,7 +150,6 @@ final class SpeedTestService: @unchecked Sendable {
         }
 
         try await waitForReady(connection)
-        let startedAt = DispatchTime.now().uptimeNanoseconds
         let header = makeRequest(
             url: url,
             node: node,
@@ -125,7 +170,7 @@ final class SpeedTestService: @unchecked Sendable {
 
         let response = try await readHeaders(on: connection)
         try validate(status: response.status)
-        return makeTransfer(bytes: body.count, startedAt: startedAt)
+        return body.count
     }
 
     private func latencySample(node: SpeedTestNode) async throws -> Double {

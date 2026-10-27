@@ -30,6 +30,8 @@ struct SpeedTestNode: Sendable {
     let uploadPath: String
     let pingPath: String
     let downloadSizeParameter: String
+    let maxDownloadMegabytesPerRequest: Int?
+    let maxUploadMegabytesPerRequest: Int?
     let referer: String?
 
     init(
@@ -43,6 +45,8 @@ struct SpeedTestNode: Sendable {
         self.uploadPath = "empty.php"
         self.pingPath = "empty.php"
         self.downloadSizeParameter = "ckSize"
+        self.maxDownloadMegabytesPerRequest = nil
+        self.maxUploadMegabytesPerRequest = nil
         self.referer = referer
     }
 
@@ -53,6 +57,8 @@ struct SpeedTestNode: Sendable {
         uploadPath: String,
         pingPath: String,
         downloadSizeParameter: String,
+        maxDownloadMegabytesPerRequest: Int? = nil,
+        maxUploadMegabytesPerRequest: Int? = nil,
         referer: String?
     ) {
         self.name = name
@@ -61,6 +67,8 @@ struct SpeedTestNode: Sendable {
         self.uploadPath = uploadPath
         self.pingPath = pingPath
         self.downloadSizeParameter = downloadSizeParameter
+        self.maxDownloadMegabytesPerRequest = maxDownloadMegabytesPerRequest
+        self.maxUploadMegabytesPerRequest = maxUploadMegabytesPerRequest
         self.referer = referer
     }
 }

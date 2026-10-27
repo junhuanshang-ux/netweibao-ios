@@ -114,6 +114,8 @@ final class SpeedTestCNService: @unchecked Sendable {
             uploadPath: path(for: uploadURL, fallback: "upload"),
             pingPath: path(for: pingURL, fallback: "hello"),
             downloadSizeParameter: "size",
+            maxDownloadMegabytesPerRequest: 10,
+            maxUploadMegabytesPerRequest: 10,
             referer: "https://www.speedtest.cn/"
         )
         return (distance, speedNode)
