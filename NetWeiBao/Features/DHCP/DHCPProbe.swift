@@ -47,6 +47,7 @@ final class DHCPProbeService: @unchecked Sendable {
         }
         defer { _ = close(fileDescriptor) }
 
+        InterfaceBinder.bind(fileDescriptor, to: NetworkInterfaceSelection.shared.selectedName)
         Self.configureSocket(fileDescriptor)
 
         var boundPort: UInt16?

@@ -10,10 +10,14 @@
 		FA9F3BD738C9E546A631513A /* NetWeiBaoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11497D70DE15DDCB46A6092B /* NetWeiBaoApp.swift */; };
 		6E5ADF97B74568D5E0C965A2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D52667B18265B03E9ABD04D /* RootView.swift */; };
 		CBDE7EEF62A35A6174B6F11B /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C71E8A40548A11FA53C324 /* DesignSystem.swift */; };
+		41BD792138C2AFF2F8A46C11 /* DNSConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB3E046EC388A262442E359 /* DNSConfiguration.swift */; };
 		C9B0B7B8FC6FD5957A0E6D8A /* HostResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983F63E04D54728C9BFC738E /* HostResolver.swift */; };
 		8C406A8D4A170695AD540058 /* IPv4Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C3A96DCF1C4D4961F336ED /* IPv4Address.swift */; };
 		8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EC279F600E29E6018B2538 /* IPv4Subnet.swift */; };
 		51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DC1E48EF91E713D567053D /* NetworkInterface.swift */; };
+		390E38BC62F37F7C4F98D374 /* NetworkInterfaceCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047277CA5235E9E95E44CF07 /* NetworkInterfaceCatalog.swift */; };
+		4AFBCA7F95000D179E5BF5AF /* NetworkInterfaceSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261624CBD49EA43364563197 /* NetworkInterfaceSelection.swift */; };
+		70AA6F3203D6F46F8F22D212 /* PermissionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE85A13BE5E08932C7AA8789 /* PermissionCoordinator.swift */; };
 		C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32907136BBE748057229209 /* AboutView.swift */; };
 		420493E7C0E3E84FA1711A84 /* AnomalyDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFFA96A80E258104CD79652 /* AnomalyDashboardView.swift */; };
 		A0E714E4BE33E59E3B14580D /* AnomalyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2C8635F08FBCF3E9277223 /* AnomalyModels.swift */; };
@@ -26,6 +30,8 @@
 		ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */; };
 		F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */; };
 		3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */; };
+		D35E5883CC0F4342923665F5 /* NetworkHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E549CB3CDB875BC0AE4E2E8C /* NetworkHomeView.swift */; };
+		49755C87BBA080BDD9BE7A16 /* NetworkHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49109FDE2D12EA5218A8C870 /* NetworkHomeViewModel.swift */; };
 		F84CF7D0E9C79FA0C5315E37 /* BatchPingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9DF7DC32EB474714225C7E /* BatchPingView.swift */; };
 		9696FA62E1580ECC97E16284 /* PingComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF10A9E3E72159BF9071CE77 /* PingComponents.swift */; };
 		1057412BDE2F295BEE4870B9 /* PingDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC7995B67C201BBE95974C0 /* PingDashboardView.swift */; };
@@ -55,10 +61,14 @@
 		11497D70DE15DDCB46A6092B /* NetWeiBaoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWeiBaoApp.swift; sourceTree = "<group>"; };
 		8D52667B18265B03E9ABD04D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		25C71E8A40548A11FA53C324 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		6DB3E046EC388A262442E359 /* DNSConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSConfiguration.swift; sourceTree = "<group>"; };
 		983F63E04D54728C9BFC738E /* HostResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostResolver.swift; sourceTree = "<group>"; };
 		67C3A96DCF1C4D4961F336ED /* IPv4Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv4Address.swift; sourceTree = "<group>"; };
 		86EC279F600E29E6018B2538 /* IPv4Subnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv4Subnet.swift; sourceTree = "<group>"; };
 		F7DC1E48EF91E713D567053D /* NetworkInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterface.swift; sourceTree = "<group>"; };
+		047277CA5235E9E95E44CF07 /* NetworkInterfaceCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterfaceCatalog.swift; sourceTree = "<group>"; };
+		261624CBD49EA43364563197 /* NetworkInterfaceSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterfaceSelection.swift; sourceTree = "<group>"; };
+		CE85A13BE5E08932C7AA8789 /* PermissionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionCoordinator.swift; sourceTree = "<group>"; };
 		C32907136BBE748057229209 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		6DFFA96A80E258104CD79652 /* AnomalyDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyDashboardView.swift; sourceTree = "<group>"; };
 		ED2C8635F08FBCF3E9277223 /* AnomalyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnomalyModels.swift; sourceTree = "<group>"; };
@@ -71,6 +81,8 @@
 		7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCatalog.swift; sourceTree = "<group>"; };
 		502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPlaceholderView.swift; sourceTree = "<group>"; };
+		E549CB3CDB875BC0AE4E2E8C /* NetworkHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHomeView.swift; sourceTree = "<group>"; };
+		49109FDE2D12EA5218A8C870 /* NetworkHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHomeViewModel.swift; sourceTree = "<group>"; };
 		BA9DF7DC32EB474714225C7E /* BatchPingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchPingView.swift; sourceTree = "<group>"; };
 		BF10A9E3E72159BF9071CE77 /* PingComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingComponents.swift; sourceTree = "<group>"; };
 		DBC7995B67C201BBE95974C0 /* PingDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingDashboardView.swift; sourceTree = "<group>"; };
@@ -147,11 +159,15 @@
 		410188F9DC6E499FEC68BCF6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				6DB3E046EC388A262442E359,
 				25C71E8A40548A11FA53C324,
 				983F63E04D54728C9BFC738E,
 				67C3A96DCF1C4D4961F336ED,
 				86EC279F600E29E6018B2538,
 				F7DC1E48EF91E713D567053D,
+				047277CA5235E9E95E44CF07,
+				261624CBD49EA43364563197,
+				CE85A13BE5E08932C7AA8789,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -163,6 +179,7 @@
 				94963B6687A4153A1A464909,
 				D8FF20BAB00E9B3D319602F9,
 				346D548FE56AB5B8C33AD008,
+				8A5475A195F1C1D579D72FFC,
 				24019A940DEEEA823AC0DA93,
 				00830CB566A63B6A939F3947,
 				9C9C6355F1844A0C011F674F,
@@ -210,6 +227,15 @@
 				502F2D2F334C370F20C1D181,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		8A5475A195F1C1D579D72FFC /* NetworkHome */ = {
+			isa = PBXGroup;
+			children = (
+				E549CB3CDB875BC0AE4E2E8C,
+				49109FDE2D12EA5218A8C870,
+			);
+			path = NetworkHome;
 			sourceTree = "<group>";
 		};
 		24019A940DEEEA823AC0DA93 /* Ping */ = {
@@ -340,10 +366,14 @@
 				FA9F3BD738C9E546A631513A /* NetWeiBaoApp.swift in Sources */,
 				6E5ADF97B74568D5E0C965A2 /* RootView.swift in Sources */,
 				CBDE7EEF62A35A6174B6F11B /* DesignSystem.swift in Sources */,
+				41BD792138C2AFF2F8A46C11 /* DNSConfiguration.swift in Sources */,
 				C9B0B7B8FC6FD5957A0E6D8A /* HostResolver.swift in Sources */,
 				8C406A8D4A170695AD540058 /* IPv4Address.swift in Sources */,
 				8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */,
 				51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */,
+				390E38BC62F37F7C4F98D374 /* NetworkInterfaceCatalog.swift in Sources */,
+				4AFBCA7F95000D179E5BF5AF /* NetworkInterfaceSelection.swift in Sources */,
+				70AA6F3203D6F46F8F22D212 /* PermissionCoordinator.swift in Sources */,
 				C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */,
 				420493E7C0E3E84FA1711A84 /* AnomalyDashboardView.swift in Sources */,
 				A0E714E4BE33E59E3B14580D /* AnomalyModels.swift in Sources */,
@@ -356,6 +386,8 @@
 				ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */,
 				F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */,
 				3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */,
+				D35E5883CC0F4342923665F5 /* NetworkHomeView.swift in Sources */,
+				49755C87BBA080BDD9BE7A16 /* NetworkHomeViewModel.swift in Sources */,
 				F84CF7D0E9C79FA0C5315E37 /* BatchPingView.swift in Sources */,
 				9696FA62E1580ECC97E16284 /* PingComponents.swift in Sources */,
 				1057412BDE2F295BEE4870B9 /* PingDashboardView.swift in Sources */,

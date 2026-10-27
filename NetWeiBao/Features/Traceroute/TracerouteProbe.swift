@@ -49,6 +49,8 @@ enum TracerouteProbe {
         }
         defer { _ = close(fileDescriptor) }
 
+        InterfaceBinder.bind(fileDescriptor, to: NetworkInterfaceSelection.shared.selectedName)
+
         var ttlValue = Int32(ttl)
         _ = setsockopt(
             fileDescriptor,

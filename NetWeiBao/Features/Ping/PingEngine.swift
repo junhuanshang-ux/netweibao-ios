@@ -32,6 +32,7 @@ final class PingEngine: @unchecked Sendable {
         let identifier = self.identifier
         let boundedTimeout = min(max(timeout, 0.1), 10)
         let boundedPayload = min(max(payloadSize, 0), 1400)
+        let interfaceName = NetworkInterfaceSelection.shared.selectedName
 
         return await withCheckedContinuation { (continuation: CheckedContinuation<PingOutcome, Never>) in
             ioQueue.addOperation {
@@ -40,7 +41,8 @@ final class PingEngine: @unchecked Sendable {
                     identifier: identifier,
                     sequence: sequence,
                     timeout: boundedTimeout,
-                    payloadSize: boundedPayload
+                    payloadSize: boundedPayload,
+                    interfaceName: interfaceName
                 )
                 continuation.resume(returning: outcome)
             }
@@ -63,13 +65,16 @@ final class PingEngine: @unchecked Sendable {
         identifier: UInt16,
         sequence: UInt16,
         timeout: TimeInterval,
-        payloadSize: Int
+        payloadSize: Int,
+        interfaceName: String?
     ) -> PingOutcome {
         let fileDescriptor = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP)
         guard fileDescriptor >= 0 else {
             return .failure("无法创建 ICMP 套接字：\(posixMessage(errno))")
         }
         defer { _ = close(fileDescriptor) }
+
+        InterfaceBinder.bind(fileDescriptor, to: interfaceName)
 
         var receiveBuffer: Int32 = 512 * 1024
         _ = setsockopt(

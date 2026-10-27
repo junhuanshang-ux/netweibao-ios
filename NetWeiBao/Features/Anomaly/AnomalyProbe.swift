@@ -129,6 +129,8 @@ enum EchoBurstProbe {
         }
         defer { _ = close(fileDescriptor) }
 
+        InterfaceBinder.bind(fileDescriptor, to: NetworkInterfaceSelection.shared.selectedName)
+
         var enabled: Int32 = 1
         _ = setsockopt(
             fileDescriptor,
