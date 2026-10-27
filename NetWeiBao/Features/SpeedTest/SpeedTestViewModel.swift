@@ -80,9 +80,14 @@ final class SpeedTestViewModel: ObservableObject {
         guard let url = URL(string: rawURL),
               let scheme = url.scheme?.lowercased(),
               scheme == "https" || scheme == "http",
-              url.host != nil
+              let host = url.host
         else {
             errorMessage = "后端地址无效，请填写完整的 http(s) URL。"
+            return
+        }
+
+        if host.lowercased().contains("speedtest.cn") {
+            errorMessage = "speedtest.cn 不是 LibreSpeed 后端，不能直接填。请使用 LibreSpeed 的 .../backend 地址。"
             return
         }
 
