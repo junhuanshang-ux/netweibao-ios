@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`9931b49ba11f8578510825b40ee2537c7259a33130da95ae8a06e21aead9d1c1`
+- SHA-256：`5e8c58e1e2ad782807e218ea764d2e6095df46c14eabc238f423d815e44b11e3`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -63,6 +63,18 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 - 顶部品牌/本机网络卡已移除，只保留“工具”网格，减少重复信息。
 - 完整网络信息统一放在“首页”。
+
+### 底部导航
+
+**首页 / 工具 / 报告 / 关于**，不再单独放 Ping；Ping 仍可从工具网格进入。
+
+### 报告已实现
+
+- **一键检测**：依次执行 Ping、DHCP、路由追踪、环路、风暴、WiFi、子网计算和快速测速，共 8 项。
+- 自动汇总为统计报告：综合评分、正常/需关注/失败/跳过数量、逐项指标与结论。
+- **PDF**：自动生成 A4 中文报告，支持下载到文件、系统分享。
+- 报告测速使用 **10 MB 下载 / 5 MB 上传**，避免巡检消耗 150 MB。
+- 全局隐藏滚动条，不再显示右侧滚动指示器。
 
 ### 网络首页已实现
 
@@ -204,8 +216,12 @@ NetWeiBao/
 ├── App/                     # App 入口、根 TabView、Info.plist
 ├── Core/                    # 设计系统、IPv4、CIDR、本机网络、DNS
 ├── Features/
-│   ├── Home/                # 工作台、工具目录、占位页
-│   ├── Ping/                # Ping 引擎、模型、三个模式的 UI
+│   ├── NetworkHome/         # 首页：接口、网关、DNS、网卡切换
+│   ├── Home/                # 工具网格
+│   ├── Report/              # 一键巡检、PDF 生成与分享
+│   ├── Ping/                # Ping 引擎与三个模式
+│   ├── SpeedTest/           # 内外网测速
+│   ├── WiFi/                # WiFi 分析
 │   └── About/               # 关于与 iOS 能力边界
 └── Assets.xcassets/         # AppIcon、AccentColor、LaunchBackground
 
@@ -260,6 +276,8 @@ docs/
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
 - 外网测速默认使用第三方 LibreSpeed 公共节点，可能被限速或临时不可用；内网测速必须在局域网自建 LibreSpeed 后端。
 - 测速会消耗流量（默认下载 100 MB + 上传 50 MB），且结果受节点、WiFi、运营商和当前负载影响；可在测速页调小。
+- 报告中的测速固定为快速模式（10 MB 下载 / 5 MB 上传），详细带宽请到“内外网测速”单独测试。
+- PDF 分享/下载依赖系统文件界面；报告数据仅保存在本机临时目录，App 退出后不保留。
 - 扫描/测速结果仅保存在内存，退出 App 后不保留。
 - App 进入后台后系统可能挂起探测，长时间扫描请保持前台。
 - 这是网络诊断工具，不替代交换机侧抓包、端口镜像或厂商网管系统。
