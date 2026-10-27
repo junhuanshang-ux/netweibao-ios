@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`06c018e68f21f7eea34ea27040f2b43128095352e3a8c02bbcf5fe40bb7f79e1`
+- SHA-256：`b830d896dc75e7c5028070d9ffabab29c787e441b7226eacd32a7cee81739c17`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -74,7 +74,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - 自动汇总为统计报告：综合评分、正常/需关注/失败/跳过数量、逐项指标与结论。
 - **PDF**：自动生成 A4 中文报告，支持下载到文件、系统分享。
 - 报告测速使用 **10 MB 下载 / 5 MB 上传**，避免巡检消耗 150 MB。
-- 全局隐藏滚动条，不再显示右侧滚动指示器。
+- 所有页面显式使用 `.scrollIndicators(.hidden)`，并关闭 `UIScrollView` 指示器，不再显示右侧滚动条。
 
 ### 网络首页已实现
 
