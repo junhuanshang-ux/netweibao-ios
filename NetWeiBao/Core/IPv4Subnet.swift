@@ -63,8 +63,12 @@ struct IPv4Subnet: Hashable, CustomStringConvertible, Sendable {
         }
     }
 
-    var description: String {
+    var cidr: String {
         "\(network)/\(prefixLength)"
+    }
+
+    var description: String {
+        cidr
     }
 
     func contains(_ address: IPv4Address) -> Bool {
