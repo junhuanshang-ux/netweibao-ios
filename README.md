@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`35ea20e2fd0a2213fc4e1ebb0178628bc31694ba333b53877f1f8a0cb9cf6fcb`
+- SHA-256：`8bbb8698ed0cc26a9d416bfa62437afc8563e727b26690de861838a8ba56f30d`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -157,6 +157,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 - 外网默认节点：**测速网（speedtest.cn）**，App 内通过专用适配器自动选择国内最近节点。
 - 测速网节点接口是网页内部接口：节点列表 AES 加密，App 内解密后按 `distance` 选择普通节点，再走 `/download?size=`、`/upload`、`/hello`。
+- 测速网单请求上限约 10 MB，App 会自动分片累计到 100 MB / 50 MB。
 - 也可切换 **LibreSpeed**，默认洛杉矶 Sharktech（`https://laxspeed.sharktech.net/backend`），支持 100 MB 下载 / 50 MB 上传。
 - `www.speedtest.cn` 不能作为 LibreSpeed URL 直接填；请在节点来源里选“测速网”。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
