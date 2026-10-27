@@ -41,6 +41,7 @@ enum ReportRunner {
 
         // MARK: Ping
         emit(.ping, "Ping \(target)")
+        let pingStartedAt = Date()
         var sent = 0
         var received = 0
         var latencies: [Double] = []
@@ -86,7 +87,7 @@ enum ReportRunner {
                     ReportMetric(label: "抖动", value: milliseconds(pingQuality.jitter))
                 ],
                 details: pingErrors.isEmpty ? [] : Array(Set(pingErrors)).prefix(2).map { $0 },
-                duration: Date().timeIntervalSince(startedAt)
+                duration: Date().timeIntervalSince(pingStartedAt)
             )
         )
 
