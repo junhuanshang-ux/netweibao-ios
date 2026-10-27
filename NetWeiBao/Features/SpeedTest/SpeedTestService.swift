@@ -205,8 +205,8 @@ final class SpeedTestService: @unchecked Sendable {
         parameters.includePeerToPeer = false
 
         if let interfaceName = NetworkInterfaceSelection.shared.selectedName,
-           let interface = requiredInterface(named: interfaceName) {
-            parameters.requiredInterface = interface
+           let interfaceType = requiredInterfaceType(named: interfaceName) {
+            parameters.requiredInterfaceType = interfaceType
         }
 
         let port = url.port ?? (url.scheme?.lowercased() == "http" ? 80 : 443)
@@ -218,22 +218,19 @@ final class SpeedTestService: @unchecked Sendable {
         )
     }
 
-    private func requiredInterface(named name: String) -> NWInterface? {
-        let type = NetworkInterfaceCatalog.interfaceType(for: name)
-        let interfaceType: NWInterface.InterfaceType
-        switch type {
+    private func requiredInterfaceType(named name: String) -> NWInterface.InterfaceType? {
+        switch NetworkInterfaceCatalog.interfaceType(for: name) {
         case .wifi:
-            interfaceType = .wifi
+            return .wifi
         case .ethernet:
-            interfaceType = .wiredEthernet
+            return .wiredEthernet
         case .cellular:
-            interfaceType = .cellular
+            return .cellular
         case .loopback:
-            interfaceType = .loopback
+            return .loopback
         default:
-            interfaceType = .other
+            return .other
         }
-        return NWInterface(name: name, type: interfaceType)
     }
 
     private func connectionHost(for url: URL) throws -> String {
@@ -244,7 +241,7 @@ final class SpeedTestService: @unchecked Sendable {
     }
 
     private func waitForReady(_ connection: NWConnection) async throws {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             let gate = ResumeGate()
             connection.stateUpdateHandler = { state in
                 switch state {
