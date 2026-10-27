@@ -1,0 +1,25 @@
+# Xcode
+DerivedData/
+build/
+out/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Build artifacts
+dist/
+*.ipa
+*.sha256
+
+# Swift Package Manager
+.swiftpm/
+Packages/
+
+# Local validation tools
+.tools/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

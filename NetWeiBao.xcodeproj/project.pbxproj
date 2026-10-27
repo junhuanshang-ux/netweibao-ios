@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA9F3BD738C9E546A631513A /* NetWeiBaoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11497D70DE15DDCB46A6092B /* NetWeiBaoApp.swift */; };
+		6E5ADF97B74568D5E0C965A2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D52667B18265B03E9ABD04D /* RootView.swift */; };
+		CBDE7EEF62A35A6174B6F11B /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C71E8A40548A11FA53C324 /* DesignSystem.swift */; };
+		C9B0B7B8FC6FD5957A0E6D8A /* HostResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983F63E04D54728C9BFC738E /* HostResolver.swift */; };
+		8C406A8D4A170695AD540058 /* IPv4Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C3A96DCF1C4D4961F336ED /* IPv4Address.swift */; };
+		8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EC279F600E29E6018B2538 /* IPv4Subnet.swift */; };
+		51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DC1E48EF91E713D567053D /* NetworkInterface.swift */; };
+		C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32907136BBE748057229209 /* AboutView.swift */; };
+		ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */; };
+		F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */; };
+		3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */; };
+		F84CF7D0E9C79FA0C5315E37 /* BatchPingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9DF7DC32EB474714225C7E /* BatchPingView.swift */; };
+		9696FA62E1580ECC97E16284 /* PingComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF10A9E3E72159BF9071CE77 /* PingComponents.swift */; };
+		1057412BDE2F295BEE4870B9 /* PingDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC7995B67C201BBE95974C0 /* PingDashboardView.swift */; };
+		524F8C243B08A758DD096725 /* PingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB48748FF47A796FF2808935 /* PingEngine.swift */; };
+		7ADC5C57B496831FB35A38CB /* PingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD98914F6541FC34C391C86 /* PingModels.swift */; };
+		DC1C2533CADED0964945BE46 /* PingViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940837FF4EFB20F224EC8D7A /* PingViewModels.swift */; };
+		0C0CD545F72546AD92E34876 /* SinglePingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5AA1D35133494812EDF05 /* SinglePingView.swift */; };
+		34FF860F03C5954286E585D5 /* SubnetPingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A58EFF70915FC2B348D1D9 /* SubnetPingView.swift */; };
+		222F0DBFFE5EB23DCD3FD16F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C36FFE920F24CEDB7CFDBFC /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		624A8F936E0903B5DF7F6FC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11497D70DE15DDCB46A6092B /* NetWeiBaoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWeiBaoApp.swift; sourceTree = "<group>"; };
+		8D52667B18265B03E9ABD04D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		25C71E8A40548A11FA53C324 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		983F63E04D54728C9BFC738E /* HostResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostResolver.swift; sourceTree = "<group>"; };
+		67C3A96DCF1C4D4961F336ED /* IPv4Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv4Address.swift; sourceTree = "<group>"; };
+		86EC279F600E29E6018B2538 /* IPv4Subnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv4Subnet.swift; sourceTree = "<group>"; };
+		F7DC1E48EF91E713D567053D /* NetworkInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterface.swift; sourceTree = "<group>"; };
+		C32907136BBE748057229209 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCatalog.swift; sourceTree = "<group>"; };
+		502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPlaceholderView.swift; sourceTree = "<group>"; };
+		BA9DF7DC32EB474714225C7E /* BatchPingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchPingView.swift; sourceTree = "<group>"; };
+		BF10A9E3E72159BF9071CE77 /* PingComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingComponents.swift; sourceTree = "<group>"; };
+		DBC7995B67C201BBE95974C0 /* PingDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingDashboardView.swift; sourceTree = "<group>"; };
+		DB48748FF47A796FF2808935 /* PingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingEngine.swift; sourceTree = "<group>"; };
+		EDD98914F6541FC34C391C86 /* PingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingModels.swift; sourceTree = "<group>"; };
+		940837FF4EFB20F224EC8D7A /* PingViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingViewModels.swift; sourceTree = "<group>"; };
+		D1F5AA1D35133494812EDF05 /* SinglePingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePingView.swift; sourceTree = "<group>"; };
+		97A58EFF70915FC2B348D1D9 /* SubnetPingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubnetPingView.swift; sourceTree = "<group>"; };
+		6C36FFE920F24CEDB7CFDBFC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		38A007151ABE87CC01A5B6E9 /* NetWeiBao.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWeiBao.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CF5BDB0BEAFE176F9629192A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ADCF10F76EBF2A74473E9DC4 = {
+			isa = PBXGroup;
+			children = (
+				DB2BFDFA86CB2D21FDEFF426 /* NetWeiBao */,
+				00C45FD35CB0F9C5F764F070 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		00C45FD35CB0F9C5F764F070 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				38A007151ABE87CC01A5B6E9 /* NetWeiBao.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB2BFDFA86CB2D21FDEFF426 /* NetWeiBao */ = {
+			isa = PBXGroup;
+			children = (
+				1C48CE29E4E135EE62951B22,
+				410188F9DC6E499FEC68BCF6,
+				1F26A8704D8CDB03D5D3D4BB,
+				6C36FFE920F24CEDB7CFDBFC,
+			);
+			path = NetWeiBao;
+			sourceTree = "<group>";
+		};
+		1C48CE29E4E135EE62951B22 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				624A8F936E0903B5DF7F6FC4,
+				11497D70DE15DDCB46A6092B,
+				8D52667B18265B03E9ABD04D,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		410188F9DC6E499FEC68BCF6 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				25C71E8A40548A11FA53C324,
+				983F63E04D54728C9BFC738E,
+				67C3A96DCF1C4D4961F336ED,
+				86EC279F600E29E6018B2538,
+				F7DC1E48EF91E713D567053D,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		1F26A8704D8CDB03D5D3D4BB /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				78FF3B1139FE36AB914895EC,
+				346D548FE56AB5B8C33AD008,
+				24019A940DEEEA823AC0DA93,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		78FF3B1139FE36AB914895EC /* About */ = {
+			isa = PBXGroup;
+			children = (
+				C32907136BBE748057229209,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		346D548FE56AB5B8C33AD008 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				7EC6716A9B9B4F4A5C9F8823,
+				ACDA516D924C8A19B9AFECB9,
+				502F2D2F334C370F20C1D181,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		24019A940DEEEA823AC0DA93 /* Ping */ = {
+			isa = PBXGroup;
+			children = (
+				BA9DF7DC32EB474714225C7E,
+				BF10A9E3E72159BF9071CE77,
+				DBC7995B67C201BBE95974C0,
+				DB48748FF47A796FF2808935,
+				EDD98914F6541FC34C391C86,
+				940837FF4EFB20F224EC8D7A,
+				D1F5AA1D35133494812EDF05,
+				97A58EFF70915FC2B348D1D9,
+			);
+			path = Ping;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0E8A3AD980EC179856012B7E /* NetWeiBao */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7ADE71700E9404B10E13B577 /* Build configuration list for PBXNativeTarget "NetWeiBao" */;
+			buildPhases = (
+				1CDF2F71A52B082132B04DFF /* Sources */,
+				CF5BDB0BEAFE176F9629192A /* Frameworks */,
+				C02F1309AF4906C92F1EAD44 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NetWeiBao;
+			productName = NetWeiBao;
+			productReference = 38A007151ABE87CC01A5B6E9 /* NetWeiBao.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		98F54143AB4E86B28C3AFEE0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					0E8A3AD980EC179856012B7E = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 12D04D787E90C9B967248BFD /* Build configuration list for PBXProject "NetWeiBao" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = ADCF10F76EBF2A74473E9DC4;
+			productRefGroup = 00C45FD35CB0F9C5F764F070 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0E8A3AD980EC179856012B7E /* NetWeiBao */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C02F1309AF4906C92F1EAD44 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				222F0DBFFE5EB23DCD3FD16F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1CDF2F71A52B082132B04DFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA9F3BD738C9E546A631513A /* NetWeiBaoApp.swift in Sources */,
+				6E5ADF97B74568D5E0C965A2 /* RootView.swift in Sources */,
+				CBDE7EEF62A35A6174B6F11B /* DesignSystem.swift in Sources */,
+				C9B0B7B8FC6FD5957A0E6D8A /* HostResolver.swift in Sources */,
+				8C406A8D4A170695AD540058 /* IPv4Address.swift in Sources */,
+				8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */,
+				51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */,
+				C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */,
+				ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */,
+				F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */,
+				3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */,
+				F84CF7D0E9C79FA0C5315E37 /* BatchPingView.swift in Sources */,
+				9696FA62E1580ECC97E16284 /* PingComponents.swift in Sources */,
+				1057412BDE2F295BEE4870B9 /* PingDashboardView.swift in Sources */,
+				524F8C243B08A758DD096725 /* PingEngine.swift in Sources */,
+				7ADC5C57B496831FB35A38CB /* PingModels.swift in Sources */,
+				DC1C2533CADED0964945BE46 /* PingViewModels.swift in Sources */,
+				0C0CD545F72546AD92E34876 /* SinglePingView.swift in Sources */,
+				34FF860F03C5954286E585D5 /* SubnetPingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		73BFC4993D558C2844970A56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Debug;
+		};
+		3C5BC6FE1E438E679FB7F74F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf-with-dsym;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("$(inherited)");
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A45358D7F57D12409C956205 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NetWeiBao/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netweibao.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		7A3CC3E65B4BE81911CE6871 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NetWeiBao/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netweibao.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		12D04D787E90C9B967248BFD /* Build configuration list for PBXProject "NetWeiBao" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73BFC4993D558C2844970A56 /* Debug */,
+				3C5BC6FE1E438E679FB7F74F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7ADE71700E9404B10E13B577 /* Build configuration list for PBXNativeTarget "NetWeiBao" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A45358D7F57D12409C956205 /* Debug */,
+				7A3CC3E65B4BE81911CE6871 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+}

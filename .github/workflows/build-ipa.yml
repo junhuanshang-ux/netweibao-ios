@@ -1,0 +1,76 @@
+name: Build unsigned IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+
+      - name: Build app (unsigned)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project NetWeiBao.xcodeproj \
+            -scheme NetWeiBao \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CONFIGURATION_BUILD_DIR="$PWD/build/Products" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package IPA
+        run: |
+          set -euo pipefail
+          APP_DIR="build/Products/NetWeiBao.app"
+          test -d "$APP_DIR"
+          rm -rf out && mkdir -p out/Payload
+          cp -R "$APP_DIR" out/Payload/
+          codesign --force --sign - --timestamp=none out/Payload/NetWeiBao.app || true
+          ( cd out && zip -qry ../NetWeiBao-unsigned.ipa Payload )
+          shasum -a 256 NetWeiBao-unsigned.ipa | tee NetWeiBao-unsigned.ipa.sha256
+          ls -lh NetWeiBao-unsigned.ipa
+          unzip -l NetWeiBao-unsigned.ipa | head -20
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetWeiBao-unsigned-ipa
+          path: |
+            NetWeiBao-unsigned.ipa
+            NetWeiBao-unsigned.ipa.sha256
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="v0.1.0-build.${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" \
+            "NetWeiBao-unsigned.ipa#NetWeiBao unsigned IPA" \
+            "NetWeiBao-unsigned.ipa.sha256#SHA-256 checksum" \
+            --title "网维宝 v0.1.0 (${GITHUB_RUN_NUMBER})" \
+            --notes "未签名 IPA，使用 Sideloadly / AltStore 自签安装。构建提交：${GITHUB_SHA}"
