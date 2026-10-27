@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`b830d896dc75e7c5028070d9ffabab29c787e441b7226eacd32a7cee81739c17`
+- SHA-256：`35ea20e2fd0a2213fc4e1ebb0178628bc31694ba333b53877f1f8a0cb9cf6fcb`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -155,9 +155,10 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 ### 内外网测速已实现
 
-- 外网默认节点：**洛杉矶 Sharktech LibreSpeed**（`https://laxspeed.sharktech.net/backend`），已验证 100 MB 下载和 50 MB 上传。
-- **支持中国内节点**：把外网后端地址改成国内 LibreSpeed 的 `.../backend` 即可；国内公共测速站多有限网/反爬，所以没有内置固定地址。
-- `www.speedtest.cn` 不是 LibreSpeed 后端，不能直接填入；它需要官方 SDK/授权 API。当前支持的是 LibreSpeed 兼容后端。
+- 外网默认节点：**测速网（speedtest.cn）**，App 内通过专用适配器自动选择国内最近节点。
+- 测速网节点接口是网页内部接口：节点列表 AES 加密，App 内解密后按 `distance` 选择普通节点，再走 `/download?size=`、`/upload`、`/hello`。
+- 也可切换 **LibreSpeed**，默认洛杉矶 Sharktech（`https://laxspeed.sharktech.net/backend`），支持 100 MB 下载 / 50 MB 上传。
+- `www.speedtest.cn` 不能作为 LibreSpeed URL 直接填；请在节点来源里选“测速网”。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
 - 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载（10–500 MB）和上传（5–200 MB）可在测速页手动调节。
 - **测速也绑定“诊断网卡”**：使用 `NWConnection` 的 `requiredInterfaceType` 强制指定 Wi-Fi / 蜂窝 / 有线接口类型；未选择时走系统默认路由，绑定失败直接报错，不回退。
@@ -275,7 +276,7 @@ docs/
 - DNS 通过 `/etc/resolv.conf` 尽力读取；iOS 沙盒可能隐藏，界面会标注“系统未公开”。
 - WiFi 只读取当前连接，不能扫描周边 AP；需要“精确”定位权限和 Access WiFi Information entitlement。
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
-- 外网测速默认使用第三方 LibreSpeed 公共节点，可能被限速或临时不可用；内网测速必须在局域网自建 LibreSpeed 后端。
+- 外网测速默认使用测速网网页节点接口，它不是正式开放 API，节点/密钥/字段可能变化；失败时可切换 LibreSpeed。内网测速必须在局域网自建 LibreSpeed 后端。
 - 测速会消耗流量（默认下载 100 MB + 上传 50 MB），且结果受节点、WiFi、运营商和当前负载影响；可在测速页调小。
 - 报告中的测速固定为快速模式（10 MB 下载 / 5 MB 上传），详细带宽请到“内外网测速”单独测试。
 - PDF 分享/下载依赖系统文件界面；报告数据仅保存在本机临时目录，App 退出后不保留。
