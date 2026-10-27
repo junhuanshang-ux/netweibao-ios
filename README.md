@@ -8,7 +8,7 @@
   <img src="https://github.com/junhuanshang-ux/netweibao-ios/actions/workflows/build-ipa.yml/badge.svg" alt="Build unsigned IPA">
 </p>
 
-面向现场网络工程师的 iPhone 诊断工具箱。当前版本已完成 **Ping（单机 / 网段 / 批量）**、**DHCP 服务器检测**，以及**环路 / 风暴启发式检测**，其余模块按顺序接入。
+面向现场网络工程师的 iPhone 诊断工具箱。当前版本已完成 **Ping（单机 / 网段 / 批量）**、**DHCP 服务器检测**、**环路 / 风暴启发式检测**、**路由追踪**、**子网计算** 与 **WiFi 分析**，只差内外网测速。
 
 > 工程是原生 SwiftUI，最低 iOS 16.0。所有网络探测均使用 Apple 公开 API，不包含私有 API、越狱依赖或第三方统计 SDK。
 
@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`b6f64f23d5b5ebb46fe459667c74d51d3140868a7ff0381f79da5eed876936c9`
+- SHA-256：`4bfa8da3904ad9ac4e074849deda63131da32b77b31832cd902ba61c5a50e569`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -33,6 +33,17 @@
 
 Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完成。
 
+### 构建耗时优化
+
+之前的等待主要来自 `macos-latest` 排队和完整 Release 构建。现在已改为：
+
+- 固定 `runs-on: macos-15`，避免 latest 镜像调度波动；
+- `actions/cache` 缓存 DerivedData，增量编译；
+- `xcodebuild -quiet`，关闭 dSYM 和 index store；
+- 只保留一个 workflow，`concurrency` 自动取消旧构建。
+
+本次从触发到 IPA 发布约 **65 秒**。GitHub 托管 runner 的排队仍可能受平台负载影响，但不会再像之前那样长时间卡在 queued。
+
 ---
 
 ## 当前进度
@@ -41,11 +52,11 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 |---|------|------|
 | 1 | Ping（单机 / 网段 / 批量） | ✅ 已完成 |
 | 2 | DHCP 服务器检测 | ✅ 已完成（待真机验证 UDP 68） |
-| 3 | 路由追踪 | ⏳ 待开发 |
+| 3 | 路由追踪 | ✅ 已完成（受 ICMP 可见性限制） |
 | 4 | 环路检测 | ✅ 已完成（启发式，受 iOS 限制） |
 | 5 | 网络风暴检测 | ✅ 已完成（链路质量代理，受 iOS 限制） |
-| 6 | WiFi 分析 | ⏳ 待开发（仅当前连接） |
-| 7 | 子网计算 | ⏳ 待开发（核心算法已就绪） |
+| 6 | WiFi 分析 | ✅ 已完成（仅当前连接） |
+| 7 | 子网计算 | ✅ 已完成 |
 | 8 | 内外网测速 | ⏳ 待开发 |
 
 ### Ping 已实现
@@ -83,6 +94,26 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 2. 增加目标单播重复回声检测，不再依赖广播回复；
 3. 广播无响应只降低置信度，不再直接返回“无法判断”；
 4. 结果页显示具体原因和下一步建议。
+
+### 路由追踪已实现
+
+- IPv4 逐跳 TTL 探测，1–30 跳、每跳超时 0.3–2.5 秒可调。
+- 解析 ICMP Time Exceeded、Echo Reply、Destination Unreachable。
+- 展示 TTL、跳点地址、RTT、目标/跳点/超时/不可达状态；支持中途停止。
+- 如果 iOS 不向非特权 socket 暴露 Time Exceeded，会显示 `*` 和“路径不可见”警告，不伪造跳点。
+
+### 子网计算已实现
+
+- 支持 CIDR、`IP + 点分掩码`、单个 IP（按 /32）。
+- 展示网络地址、广播地址、掩码、反掩码、首/末主机、可用主机数、总地址数、前缀与 32 位二进制。
+- 支持一键使用本机网段；纯本地计算，不发起网络请求。
+
+### WiFi 分析已实现
+
+- 读取当前 SSID、BSSID、是否加密、是否自动加入、信号强度。
+- 对网关做 6 次采样，展示平均延迟、丢包与抖动。
+- 需要定位权限；SSID/BSSID 还需要 **Access WiFi Information** entitlement（已加入工程）。
+- iOS 不允许扫描周边 AP；模拟器通常无法返回 SSID。
 
 ---
 
@@ -185,7 +216,10 @@ docs/
 
 - 目标可能主动丢弃 ICMP，**超时不等于设备离线**。
 - iOS 会在首次访问局域网时弹“本地网络”权限；拒绝后探测会失败。
-- 当前只支持 IPv4；IPv6、TTL / 路由跳数尚未接入。
+- 当前只支持 IPv4；IPv6 尚未接入。
+- 路由追踪依赖 iOS 是否向非特权 ICMP socket 暴露 `Time Exceeded`；不暴露时只能显示 `*`，不能伪造跳点。
+- WiFi 只读取当前连接，不能扫描周边 AP；需要定位权限和 Access WiFi Information entitlement。
+- Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
 - 扫描结果仅保存在内存，退出 App 后不保留。
 - App 进入后台后系统可能挂起探测，长时间扫描请保持前台。
 - 这是网络诊断工具，不替代交换机侧抓包、端口镜像或厂商网管系统。
@@ -196,6 +230,4 @@ docs/
 
 ## 下一步
 
-按顺序实现 **路由追踪**：IPv4 逐跳 TTL 探测、每跳延迟、超时与路径异常标记。先在真机上验证 iOS 对 ICMP Time Exceeded 的可见性；如果系统只返回有限错误，会明确标注为“不完整路径”，不伪造跳点。
-
-之后再按顺序做 WiFi 分析、子网计算、内外网测速。
+只剩 **内外网测速**：下载/上传吞吐、延迟与抖动，支持自建或授权测速端点，区分内网和公网目标。

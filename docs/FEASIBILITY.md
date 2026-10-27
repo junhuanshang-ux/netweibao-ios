@@ -8,11 +8,11 @@
 |---|------|--------|----------|----------|
 | 1 | Ping | ✅ 可行 | `SOCK_DGRAM` + `IPPROTO_ICMP`，TaskGroup 并发 | 本地网络权限；目标可能丢 ICMP |
 | 2 | DHCP 检测 | ✅ 已实现（待真机验证） | UDP 67/68 广播 DISCOVER/OFFER | 绑定 68、广播策略、企业网络隔离 |
-| 3 | 路由追踪 | ⚠️ 受限 | 递增 TTL + 解析 ICMP 超时 | 无 raw socket；部分网络拿不到跳点 |
+| 3 | 路由追踪 | ✅ 已实现（受限） | 递增 TTL + 解析 ICMP 超时 | 无 raw socket；部分网络拿不到跳点 |
 | 4 | 环路检测 | ✅ 已实现（启发式） | 广播重复回声 + 网关质量 | 读不到 MAC 表 / STP / 交换机端口 |
 | 5 | 风暴检测 | ✅ 已实现（代理指标） | 广播前后链路质量对比 | 无 BPF / 混杂模式 / 端口镜像 |
-| 6 | WiFi 分析 | ⚠️ 仅当前连接 | `NEHotspotNetwork` + 网关质量 | 不能扫描周边 AP；需定位权限与 entitlement |
-| 7 | 子网计算 | ✅ 可行 | 纯本地 IPv4/CIDR 计算 | 无 |
+| 6 | WiFi 分析 | ✅ 已实现（仅当前连接） | `NEHotspotNetwork` + 网关质量 | 不能扫描周边 AP；需定位权限与 entitlement |
+| 7 | 子网计算 | ✅ 已实现 | 纯本地 IPv4/CIDR 计算 | 无 |
 | 8 | 内外网测速 | ✅ 有条件 | `URLSession` 对自建/授权端点 | 需要测速服务端与流量；公共 API 授权 |
 
 ---
@@ -71,6 +71,14 @@
 ---
 
 ## 3. 路由追踪
+
+**已实现**
+
+- 对 ICMP Echo 设置 `IP_TTL = 1...30`。
+- 每跳等待 ICMP Time Exceeded、Echo Reply 或 Destination Unreachable，记录来源地址和 RTT。
+- 到达目标时标记“目标”；无响应显示 `*`；不可达提前结束。
+- 最大跳数、每跳超时可调，支持中途停止。
+- 如果系统不暴露 ICMP 错误，会显示“路径不可见”警告，不伪造跳点。
 
 **理论路径**
 
@@ -142,6 +150,14 @@ iOS App 没有 BPF / promiscuous mode / raw Ethernet 权限，所以无法实现
 
 ## 6. WiFi 分析
 
+**已实现**
+
+- 读取当前 SSID、BSSID、是否加密、是否自动加入、信号强度。
+- 对网关做 6 次采样，展示平均延迟、丢包与抖动。
+- 请求定位权限；工程已加入 `com.apple.developer.networking.wifi-info` entitlement。
+- 读取失败时显示原因，不伪造 SSID；模拟器通常返回空。
+- 重新签名时，provisioning profile 也需要包含 WiFi Info entitlement。
+
 **可用公开能力**
 
 - `NEHotspotNetwork.fetchCurrent` 读取当前 SSID、BSSID、信号强度、安全类型、是否自动加入。
@@ -165,7 +181,7 @@ iOS App 没有 BPF / promiscuous mode / raw Ethernet 权限，所以无法实现
 
 ## 7. 子网计算
 
-纯本地计算，无权限要求。核心 `IPv4Subnet` 已随 Ping 模块完成：
+**已实现 UI。** 支持 CIDR、`IP + 点分掩码`、单个 IP（/32），展示网络/广播/掩码/反掩码/主机范围/数量/二进制。纯本地计算，无权限要求。核心 `IPv4Subnet` 已随 Ping 模块完成：
 
 - CIDR ↔ 网络地址 / 广播地址 / 掩码；
 - 可用主机范围与数量；
