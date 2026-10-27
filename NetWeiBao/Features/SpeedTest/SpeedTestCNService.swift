@@ -106,7 +106,7 @@ final class SpeedTestCNService: @unchecked Sendable {
             ? "测速网 · \(operatorName)"
             : "测速网 · \(location) · \(operatorName)"
 
-        let distance = Int(node.distance ?? "") ?? Int.max
+        let distance = node.distance?.value ?? Int.max
         let speedNode = SpeedTestNode(
             name: name,
             baseURL: baseURL,
@@ -171,13 +171,28 @@ final class SpeedTestCNService: @unchecked Sendable {
         let data: [Node]
     }
 
+    private struct FlexibleInt: Decodable {
+        let value: Int?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let intValue = try? container.decode(Int.self) {
+                value = intValue
+            } else if let stringValue = try? container.decode(String.self) {
+                value = Int(stringValue)
+            } else {
+                value = nil
+            }
+        }
+    }
+
     private struct Node: Decodable {
         let id: String?
         let host: String?
         let province: String?
         let city: String?
         let operatorName: String?
-        let distance: String?
+        let distance: FlexibleInt?
         let isCDN: Int?
         let downloadUrl: String?
         let uploadUrl: String?
