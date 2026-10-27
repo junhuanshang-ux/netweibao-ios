@@ -18,10 +18,10 @@ struct RootView: View {
                 }
 
             NavigationStack {
-                PingDashboardView()
+                ReportDashboardView()
             }
             .tabItem {
-                Label("Ping", systemImage: "dot.radiowaves.left.and.right")
+                Label("报告", systemImage: "doc.text.magnifyingglass")
             }
 
             AboutView()
