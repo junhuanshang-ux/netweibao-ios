@@ -43,6 +43,7 @@ struct ReportDashboardView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .scrollIndicators(.hidden)
         .toolbar(.hidden, for: .navigationBar)
         .fileExporter(
             isPresented: $viewModel.showExporter,

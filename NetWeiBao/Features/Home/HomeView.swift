@@ -39,6 +39,7 @@ struct HomeView: View {
                     .padding(.bottom, 30)
                 }
             }
+            .scrollIndicators(.hidden)
             .toolbar(.hidden, for: .navigationBar)
         }
     }

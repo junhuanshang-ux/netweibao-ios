@@ -41,6 +41,7 @@ struct SubnetCalculatorView: View {
         }
         .navigationTitle("子网计算")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .toolbar(.visible, for: .navigationBar)
     }
 

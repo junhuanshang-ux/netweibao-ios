@@ -37,6 +37,7 @@ struct DHCPDashboardView: View {
         }
         .navigationTitle("DHCP 检测")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .toolbar(.visible, for: .navigationBar)
         .onAppear {
             viewModel.refreshInterface()

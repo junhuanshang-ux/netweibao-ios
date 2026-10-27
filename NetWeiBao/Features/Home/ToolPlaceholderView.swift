@@ -23,6 +23,7 @@ struct ToolPlaceholderView: View {
                 .padding(.bottom, 30)
             }
         }
+        .scrollIndicators(.hidden)
         .navigationTitle(tool.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)

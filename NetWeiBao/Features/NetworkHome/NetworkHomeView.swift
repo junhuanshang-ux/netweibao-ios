@@ -30,6 +30,7 @@ struct NetworkHomeView: View {
                 .padding(.bottom, 30)
             }
         }
+        .scrollIndicators(.hidden)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.start()

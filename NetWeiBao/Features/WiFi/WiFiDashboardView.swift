@@ -61,6 +61,7 @@ struct WiFiDashboardView: View {
         }
         .navigationTitle("WiFi 分析")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .toolbar(.visible, for: .navigationBar)
         .onAppear {
             viewModel.refresh()

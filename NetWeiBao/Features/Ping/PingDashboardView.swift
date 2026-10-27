@@ -32,6 +32,7 @@ struct PingDashboardView: View {
             }
             .scrollDismissesKeyboard(.interactively)
         }
+        .scrollIndicators(.hidden)
         .navigationTitle("Ping")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)

@@ -20,6 +20,7 @@ struct AboutView: View {
                     .padding(.bottom, 30)
                 }
             }
+            .scrollIndicators(.hidden)
             .navigationTitle("关于")
             .navigationBarTitleDisplayMode(.inline)
         }

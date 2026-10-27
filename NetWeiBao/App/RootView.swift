@@ -29,6 +29,7 @@ struct RootView: View {
                     Label("关于", systemImage: "info.circle")
                 }
         }
+        .scrollIndicators(.hidden)
         .environmentObject(permissions)
         .tint(AppTheme.accent)
         .toolbarBackground(AppTheme.background, for: .tabBar)

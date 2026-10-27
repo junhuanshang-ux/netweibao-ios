@@ -50,6 +50,7 @@ struct TracerouteDashboardView: View {
         }
         .navigationTitle("路由追踪")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .toolbar(.visible, for: .navigationBar)
         .onAppear {
             viewModel.refreshInterface()

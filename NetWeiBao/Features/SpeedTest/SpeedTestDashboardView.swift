@@ -54,6 +54,7 @@ struct SpeedTestDashboardView: View {
         }
         .navigationTitle("内外网测速")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
         .toolbar(.visible, for: .navigationBar)
         .onChange(of: viewModel.mode) { _ in
             viewModel.modeChanged()

@@ -40,6 +40,7 @@ struct AnomalyDashboardView: View {
                 .padding(.bottom, 34)
             }
         }
+        .scrollIndicators(.hidden)
         .navigationTitle(viewModel.mode.rawValue)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
