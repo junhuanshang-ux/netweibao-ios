@@ -35,7 +35,7 @@ enum ToolCatalog {
             subtitle: "发现与租约识别",
             icon: "server.rack",
             tint: AppTheme.blue,
-            available: false,
+            available: true,
             details: "发现局域网中的 DHCP 服务器，读取 OFFER 中的服务器标识、租期、网关与 DNS。",
             capabilities: [
                 "广播 DHCP DISCOVER",

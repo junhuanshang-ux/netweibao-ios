@@ -15,6 +15,10 @@
 		8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EC279F600E29E6018B2538 /* IPv4Subnet.swift */; };
 		51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DC1E48EF91E713D567053D /* NetworkInterface.swift */; };
 		C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32907136BBE748057229209 /* AboutView.swift */; };
+		3E6A1DDE629B070D85B8FEFD /* DHCPDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2883DE9B598E82C3CD175D7B /* DHCPDashboardView.swift */; };
+		7F226FEA17754864CD117B13 /* DHCPModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B281D43A60069FB44B2FCCB7 /* DHCPModels.swift */; };
+		D7EBFD802D7239132F9CF12A /* DHCPProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912E1379732B3582E96D2C42 /* DHCPProbe.swift */; };
+		AEE5AC60ADAF3CDF0C0DE5DC /* DHCPViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5A2E699E4D26BFCBE2B4F4 /* DHCPViewModel.swift */; };
 		ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */; };
 		F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */; };
 		3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */; };
@@ -39,6 +43,10 @@
 		86EC279F600E29E6018B2538 /* IPv4Subnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv4Subnet.swift; sourceTree = "<group>"; };
 		F7DC1E48EF91E713D567053D /* NetworkInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterface.swift; sourceTree = "<group>"; };
 		C32907136BBE748057229209 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		2883DE9B598E82C3CD175D7B /* DHCPDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHCPDashboardView.swift; sourceTree = "<group>"; };
+		B281D43A60069FB44B2FCCB7 /* DHCPModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHCPModels.swift; sourceTree = "<group>"; };
+		912E1379732B3582E96D2C42 /* DHCPProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHCPProbe.swift; sourceTree = "<group>"; };
+		AC5A2E699E4D26BFCBE2B4F4 /* DHCPViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHCPViewModel.swift; sourceTree = "<group>"; };
 		7EC6716A9B9B4F4A5C9F8823 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		ACDA516D924C8A19B9AFECB9 /* ToolCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCatalog.swift; sourceTree = "<group>"; };
 		502F2D2F334C370F20C1D181 /* ToolPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPlaceholderView.swift; sourceTree = "<group>"; };
@@ -118,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				78FF3B1139FE36AB914895EC,
+				D8FF20BAB00E9B3D319602F9,
 				346D548FE56AB5B8C33AD008,
 				24019A940DEEEA823AC0DA93,
 			);
@@ -130,6 +139,17 @@
 				C32907136BBE748057229209,
 			);
 			path = About;
+			sourceTree = "<group>";
+		};
+		D8FF20BAB00E9B3D319602F9 /* DHCP */ = {
+			isa = PBXGroup;
+			children = (
+				2883DE9B598E82C3CD175D7B,
+				B281D43A60069FB44B2FCCB7,
+				912E1379732B3582E96D2C42,
+				AC5A2E699E4D26BFCBE2B4F4,
+			);
+			path = DHCP;
 			sourceTree = "<group>";
 		};
 		346D548FE56AB5B8C33AD008 /* Home */ = {
@@ -235,6 +255,10 @@
 				8377DBC47E0C21AABC384C6C /* IPv4Subnet.swift in Sources */,
 				51FD9D7CCB50A7A085203357 /* NetworkInterface.swift in Sources */,
 				C96FCC0B23F019FD3FA86AD5 /* AboutView.swift in Sources */,
+				3E6A1DDE629B070D85B8FEFD /* DHCPDashboardView.swift in Sources */,
+				7F226FEA17754864CD117B13 /* DHCPModels.swift in Sources */,
+				D7EBFD802D7239132F9CF12A /* DHCPProbe.swift in Sources */,
+				AEE5AC60ADAF3CDF0C0DE5DC /* DHCPViewModel.swift in Sources */,
 				ED516CE2FE773EA1758789F9 /* HomeView.swift in Sources */,
 				F885A525E9B0243CC4DC9ED3 /* ToolCatalog.swift in Sources */,
 				3FE5E059A473AB8826BF0CE2 /* ToolPlaceholderView.swift in Sources */,

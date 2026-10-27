@@ -21,7 +21,7 @@ struct HomeView: View {
                         HStack(alignment: .firstTextBaseline) {
                             SectionLabel(title: "工具")
                             Spacer()
-                            Text("1 / \(ToolCatalog.items.count) 已上线")
+                            Text("2 / \(ToolCatalog.items.count) 已上线")
                                 .font(.system(size: 10, weight: .medium, design: .rounded))
                                 .foregroundStyle(AppTheme.textTertiary)
                         }
@@ -132,7 +132,7 @@ struct HomeView: View {
     private var footer: some View {
         HStack(spacing: 8) {
             StatusDot(color: AppTheme.accent)
-            Text("Ping 已就绪，其余模块按顺序开发中")
+            Text("Ping / DHCP 已就绪，其余模块按顺序开发中")
                 .font(.system(size: 10, weight: .regular, design: .rounded))
                 .foregroundStyle(AppTheme.textTertiary)
         }
@@ -144,6 +144,8 @@ struct HomeView: View {
     private func destination(for tool: ToolItem) -> some View {
         if tool.id == "ping" {
             PingDashboardView()
+        } else if tool.id == "dhcp" {
+            DHCPDashboardView()
         } else {
             ToolPlaceholderView(tool: tool)
         }
