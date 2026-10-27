@@ -2,7 +2,7 @@ import Foundation
 
 enum SpeedTestMode: String, CaseIterable, Identifiable, Hashable, Sendable {
     case external = "外网"
-    case internal = "内网"
+    case intranet = "内网"
 
     var id: String { rawValue }
 }

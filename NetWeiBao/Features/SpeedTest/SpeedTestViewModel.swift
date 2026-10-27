@@ -50,7 +50,7 @@ final class SpeedTestViewModel: ObservableObject {
 
         let rawURL = activeURL.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !rawURL.isEmpty else {
-            errorMessage = mode == .internal
+            errorMessage = mode == .intranet
                 ? "内网测速需要填写 LibreSpeed 后端地址，例如 http://192.168.1.10:8080/backend"
                 : "请填写外网测速后端地址"
             return
