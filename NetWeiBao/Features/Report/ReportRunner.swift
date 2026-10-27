@@ -9,6 +9,8 @@ enum ReportRunner {
     static let reportSpeedUploadMB = 5
 
     static func run(
+        speedProvider: SpeedTestProvider = .speedTestCN,
+        speedLibreURL: String = SpeedTestViewModel.defaultExternalURL,
         onProgress: @escaping @MainActor (ReportProgress) -> Void
     ) async throws -> ReportSnapshot {
         let info = NetworkInterface.activeIPv4()
@@ -338,7 +340,10 @@ enum ReportRunner {
         // MARK: Speed
         try Task.checkCancellation()
         emit(.speed, "快速测速 \(reportSpeedDownloadMB) MB / \(reportSpeedUploadMB) MB")
-        let speedResult = await quickSpeedResult()
+        let speedResult = await quickSpeedResult(
+            provider: speedProvider,
+            libreURL: speedLibreURL
+        )
         append(.speed, speedResult)
 
         return ReportSnapshot(
@@ -356,20 +361,47 @@ enum ReportRunner {
         )
     }
 
-    private static func quickSpeedResult() async -> ReportTestResult {
+    private static func quickSpeedResult(
+        provider: SpeedTestProvider,
+        libreURL: String
+    ) async -> ReportTestResult {
         let startedAt = Date()
         let node: SpeedTestNode
-        var nodeNote = "报告使用测速网自动选择的国内节点。"
+        var nodeNote: String
 
-        do {
-            node = try await SpeedTestCNService.shared.resolveNode()
-        } catch {
+        switch provider {
+        case .speedTestCN:
+            nodeNote = "报告使用测速网自动选择的国内节点。"
+            do {
+                node = try await SpeedTestCNService.shared.resolveNode()
+            } catch {
+                node = SpeedTestNode(
+                    name: "洛杉矶 · Sharktech (LibreSpeed)",
+                    baseURL: URL(string: SpeedTestViewModel.defaultExternalURL)!,
+                    referer: nil
+                )
+                nodeNote = "测速网节点解析失败，已回退到 LibreSpeed：\(error.localizedDescription)"
+            }
+
+        case .libreSpeed:
+            guard let url = URL(string: libreURL.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                return ReportTestResult(
+                    kind: .speed,
+                    status: .fail,
+                    headline: "LibreSpeed 节点地址无效",
+                    metrics: [
+                        ReportMetric(label: "节点", value: libreURL)
+                    ],
+                    details: ["请到报告页填写完整的 http(s) 地址。"],
+                    duration: Date().timeIntervalSince(startedAt)
+                )
+            }
             node = SpeedTestNode(
-                name: "洛杉矶 · Sharktech (LibreSpeed)",
-                baseURL: URL(string: SpeedTestViewModel.defaultExternalURL)!,
+                name: "LibreSpeed · 自定义节点",
+                baseURL: url,
                 referer: nil
             )
-            nodeNote = "测速网节点解析失败，已回退到 LibreSpeed：\(error.localizedDescription)"
+            nodeNote = "报告使用手动指定的 LibreSpeed 节点。"
         }
 
         do {

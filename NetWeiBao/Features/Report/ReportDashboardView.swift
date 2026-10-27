@@ -105,6 +105,32 @@ struct ReportDashboardView: View {
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
 
+                HStack {
+                    SectionLabel(title: "巡检测速节点")
+                    Spacer()
+                    Picker("巡检测速节点", selection: $viewModel.speedProvider) {
+                        ForEach(SpeedTestProvider.allCases) { provider in
+                            Text(provider.rawValue).tag(provider)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 180)
+                    .disabled(viewModel.isRunning)
+                }
+
+                if viewModel.speedProvider == .libreSpeed {
+                    TextField("LibreSpeed 后端地址", text: $viewModel.speedLibreURL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .keyboardType(.URL)
+                        .disabled(viewModel.isRunning)
+                        .terminalField()
+                } else {
+                    Text("自动选择测速网国内最近节点。")
+                        .font(.system(size: 9, weight: .regular, design: .rounded))
+                        .foregroundStyle(AppTheme.textTertiary)
+                }
+
                 Button {
                     if viewModel.isRunning {
                         viewModel.cancel()
@@ -121,7 +147,7 @@ struct ReportDashboardView: View {
                     PrimaryButtonStyle(color: viewModel.isRunning ? AppTheme.danger : tint)
                 )
 
-                Text("检测会使用当前“诊断网卡”，测速也会强制绑定该接口。")
+                Text("检测会使用当前“诊断网卡”；报告测速固定为 10 MB 下载 / 5 MB 上传，并强制绑定该接口。")
                     .font(.system(size: 9, weight: .regular, design: .rounded))
                     .foregroundStyle(AppTheme.textTertiary)
             }

@@ -77,7 +77,7 @@ final class SpeedTestCNService: @unchecked Sendable {
     }
 
     private func makeNode(_ node: Node) -> (distance: Int, node: SpeedTestNode)? {
-        guard node.isCDN != 1,
+        guard node.isCDN?.value != 1,
               let downloadString = node.downloadUrl,
               let uploadString = node.uploadUrl,
               let pingString = node.pingUrl,
@@ -193,7 +193,7 @@ final class SpeedTestCNService: @unchecked Sendable {
         let city: String?
         let operatorName: String?
         let distance: FlexibleInt?
-        let isCDN: Int?
+        let isCDN: FlexibleInt?
         let downloadUrl: String?
         let uploadUrl: String?
         let pingUrl: String?

@@ -11,6 +11,8 @@ final class ReportViewModel: ObservableObject {
     @Published private(set) var pdfData: Data?
     @Published var errorMessage: String?
     @Published var showExporter = false
+    @Published var speedProvider: SpeedTestProvider = .speedTestCN
+    @Published var speedLibreURL = SpeedTestViewModel.defaultExternalURL
 
     private var task: Task<Void, Never>?
 
@@ -52,7 +54,10 @@ final class ReportViewModel: ObservableObject {
             guard let self else { return }
 
             do {
-                let snapshot = try await ReportRunner.run { [weak self] update in
+                let snapshot = try await ReportRunner.run(
+                    speedProvider: self.speedProvider,
+                    speedLibreURL: self.speedLibreURL
+                ) { [weak self] update in
                     self?.progress = update
                 }
                 try Task.checkCancellation()
