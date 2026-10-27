@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`b5ba77f011aa5f4cd1aef79f667d4de5351a9e564150f5de60136b298ecbd357`
+- SHA-256：`9931b49ba11f8578510825b40ee2537c7259a33130da95ae8a06e21aead9d1c1`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 

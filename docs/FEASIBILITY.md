@@ -13,7 +13,7 @@
 | 5 | 风暴检测 | ✅ 已实现（代理指标） | 广播前后链路质量对比 | 无 BPF / 混杂模式 / 端口镜像 |
 | 6 | WiFi 分析 | ✅ 已实现（仅当前连接） | `NEHotspotNetwork` + 网关质量 | 不能扫描周边 AP；需定位权限与 entitlement |
 | 7 | 子网计算 | ✅ 已实现 | 纯本地 IPv4/CIDR 计算 | 无 |
-| 8 | 内外网测速 | ✅ 已实现 | LibreSpeed 后端（默认东京公共节点） | 公共节点可能限速；内网需自建后端；消耗流量 |
+| 8 | 内外网测速 | ✅ 已实现 | LibreSpeed 后端（默认洛杉矶 Sharktech） | 公共节点可能限速；内网需自建后端；默认消耗 150 MB 流量 |
 
 ---
 
@@ -196,9 +196,9 @@ iOS App 没有 BPF / promiscuous mode / raw Ethernet 权限，所以无法实现
 
 **已实现**
 
-- 外网默认节点：东京 A573 LibreSpeed（`https://librespeed.a573.net/backend`），已验证 10 MB 下载与 4 MB 上传。
+- 外网默认节点：洛杉矶 Sharktech LibreSpeed（`https://laxspeed.sharktech.net/backend`），已验证 100 MB 下载与 50 MB 上传。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址。
-- 流程：5 次延迟采样 → 10 MB 下载 → 4 MB 上传。
+- 流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；大小可手动调节。
 - 结果：下载/上传 Mbps、平均延迟、抖动、丢包、传输字节、耗时；内网/外网结果可对比。
 - 使用 Safari UA + Referer 访问 LibreSpeed 后端；公共节点可能限速或临时不可用。
 - `NSAllowsLocalNetworking` 允许局域网 HTTP 测速；公网默认 HTTPS。
