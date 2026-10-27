@@ -21,7 +21,7 @@ struct HomeView: View {
                         HStack(alignment: .firstTextBaseline) {
                             SectionLabel(title: "工具")
                             Spacer()
-                            Text("7 / \(ToolCatalog.items.count) 已上线")
+                            Text("8 / \(ToolCatalog.items.count) 已上线")
                                 .font(.system(size: 10, weight: .medium, design: .rounded))
                                 .foregroundStyle(AppTheme.textTertiary)
                         }
@@ -132,7 +132,7 @@ struct HomeView: View {
     private var footer: some View {
         HStack(spacing: 8) {
             StatusDot(color: AppTheme.accent)
-            Text("7 个模块已就绪，仅剩内外网测速")
+            Text("8 个模块全部就绪")
                 .font(.system(size: 10, weight: .regular, design: .rounded))
                 .foregroundStyle(AppTheme.textTertiary)
         }
@@ -156,6 +156,8 @@ struct HomeView: View {
             WiFiDashboardView()
         } else if tool.id == "subnet" {
             SubnetCalculatorView()
+        } else if tool.id == "speed" {
+            SpeedTestDashboardView()
         } else {
             ToolPlaceholderView(tool: tool)
         }

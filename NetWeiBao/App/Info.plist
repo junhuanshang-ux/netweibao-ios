@@ -28,6 +28,16 @@
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>网维宝需要访问本地网络，用于 Ping、网段扫描、DHCP 检测和路由追踪等诊断操作。</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>WiFiAnalysis</key>
+		<string>用于读取当前 WiFi 的 SSID、BSSID 与信号强度。</string>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>用于读取当前 Wi-Fi 的名称与信号强度，进行无线链路分析。</string>
 	<key>UIApplicationSceneManifest</key>

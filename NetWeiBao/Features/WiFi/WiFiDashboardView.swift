@@ -20,6 +20,10 @@ struct WiFiDashboardView: View {
                         loadingCard
                     }
 
+                    if let info = viewModel.interfaceInfo {
+                        interfaceCard(info)
+                    }
+
                     if let network = viewModel.network {
                         networkCard(network)
                     }
@@ -34,6 +38,7 @@ struct WiFiDashboardView: View {
 
                     if !viewModel.isLoading,
                        viewModel.network == nil,
+                       viewModel.quality == nil,
                        viewModel.errorMessage == nil {
                         AppCard {
                             EmptyStateView(
@@ -45,7 +50,7 @@ struct WiFiDashboardView: View {
                     }
 
                     InlineInfoNote(
-                        text: "iOS 只允许读取当前连接的 WiFi，不能扫描周边 AP。SSID/BSSID 需要定位权限和 WiFi Info entitlement；模拟器通常无法返回。"
+                        text: "iOS 只允许读取当前连接的 WiFi，不能扫描周边 AP。SSID/BSSID 需要“精确”定位权限和 WiFi Info entitlement；读取不到 SSID 时，仍会展示网关延迟/丢包/抖动作为无线链路参考。"
                     )
                     .padding(.horizontal, 2)
                 }
@@ -127,6 +132,14 @@ struct WiFiDashboardView: View {
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(AppTheme.amber)
                         .buttonStyle(.plain)
+                    } else if viewModel.isAuthorized,
+                              viewModel.accuracyAuthorization == .reducedAccuracy {
+                        Button("精确位置") {
+                            viewModel.requestFullAccuracy()
+                        }
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(AppTheme.amber)
+                        .buttonStyle(.plain)
                     } else {
                         Button("刷新") {
                             viewModel.refresh()
@@ -137,10 +150,14 @@ struct WiFiDashboardView: View {
                     }
                 }
 
-                Text("iOS 要求定位权限才能向 App 暴露当前 WiFi 的 SSID/BSSID。")
-                    .font(.system(size: 10, weight: .regular, design: .rounded))
-                    .foregroundStyle(AppTheme.textTertiary)
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(
+                    viewModel.isAuthorized && viewModel.accuracyAuthorization == .reducedAccuracy
+                        ? "当前是“模糊定位”，iOS 可能不返回 SSID/BSSID。请授予精确位置；网关质量仍可正常测量。"
+                        : "iOS 要求定位权限才能向 App 暴露当前 WiFi 的 SSID/BSSID。"
+                )
+                .font(.system(size: 10, weight: .regular, design: .rounded))
+                .foregroundStyle(AppTheme.textTertiary)
+                .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -154,6 +171,49 @@ struct WiFiDashboardView: View {
                     .font(.system(size: 11, weight: .regular, design: .rounded))
                     .foregroundStyle(AppTheme.textSecondary)
                 Spacer(minLength: 0)
+            }
+        }
+    }
+
+    private func interfaceCard(_ info: NetworkInterface.Info) -> some View {
+        AppCard {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill((viewModel.isWiFiInterface ? tint : AppTheme.amber).opacity(0.12))
+                    Image(systemName: viewModel.isWiFiInterface ? "wifi" : "antenna.radiowaves.left.and.right")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(viewModel.isWiFiInterface ? tint : AppTheme.amber)
+                }
+                .frame(width: 40, height: 40)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(viewModel.isWiFiInterface ? "WiFi 接口" : "当前接口")
+                        .font(.system(size: 10, weight: .medium, design: .rounded))
+                        .foregroundStyle(AppTheme.textTertiary)
+
+                    Text("\(info.name) · \(info.address.description)")
+                        .font(.system(size: 15, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(AppTheme.textPrimary)
+
+                    Text(info.subnet.description)
+                        .font(.system(size: 9, weight: .regular, design: .monospaced))
+                        .foregroundStyle(AppTheme.textTertiary)
+                }
+
+                Spacer(minLength: 6)
+
+                if let gateway = viewModel.gateway {
+                    VStack(alignment: .trailing, spacing: 3) {
+                        Text("网关")
+                            .font(.system(size: 9, weight: .medium, design: .rounded))
+                            .foregroundStyle(AppTheme.textTertiary)
+                        Text(gateway.description)
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .foregroundStyle(AppTheme.textSecondary)
+                            .lineLimit(1)
+                    }
+                }
             }
         }
     }

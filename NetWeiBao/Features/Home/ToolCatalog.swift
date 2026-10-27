@@ -125,7 +125,7 @@ enum ToolCatalog {
             subtitle: "吞吐 / 延迟 / 抖动",
             icon: "speedometer",
             tint: Color(hex: 0xFF8A65),
-            available: false,
+            available: true,
             details: "对内网网关或公网测速端点执行下载、上传与延迟测试，区分内网和外网瓶颈。",
             capabilities: [
                 "下载与上传吞吐",
