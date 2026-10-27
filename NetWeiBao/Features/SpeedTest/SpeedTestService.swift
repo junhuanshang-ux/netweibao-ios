@@ -275,7 +275,7 @@ final class SpeedTestService: @unchecked Sendable {
         on connection: NWConnection,
         isComplete: Bool
     ) async throws {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             let gate = ResumeGate()
             connection.send(
                 content: data,
@@ -293,7 +293,7 @@ final class SpeedTestService: @unchecked Sendable {
     }
 
     private func receive(on connection: NWConnection) async throws -> (data: Data, isComplete: Bool) {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<(Data, Bool), Error>) in
             let gate = ResumeGate()
             connection.receive(
                 minimumIncompleteLength: 1,
