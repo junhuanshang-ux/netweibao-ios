@@ -48,7 +48,7 @@ def relative_files() -> list[Path]:
     for path in sorted(SOURCE_ROOT.rglob("*")):
         if not path.is_file():
             continue
-        if path.suffix == ".swift" or path.name == "Info.plist":
+        if path.suffix in {".swift", ".entitlements"} or path.name == "Info.plist":
             files.append(path.relative_to(SOURCE_ROOT))
     return files
 
@@ -98,6 +98,7 @@ def file_type(path: Path) -> str:
     return {
         ".swift": "sourcecode.swift",
         ".plist": "text.plist.xml",
+        ".entitlements": "text.plist.entitlements",
         ".xcassets": "folder.assetcatalog",
     }.get(path.suffix, "text")
 
@@ -405,6 +406,7 @@ def main() -> None:
         settings = [
             ("ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon"),
             ("ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME", "AccentColor"),
+            ("CODE_SIGN_ENTITLEMENTS", "NetWeiBao/App/NetWeiBao.entitlements"),
             ("CODE_SIGN_STYLE", "Automatic"),
             ("CURRENT_PROJECT_VERSION", "1"),
             ("ENABLE_PREVIEWS", "YES"),

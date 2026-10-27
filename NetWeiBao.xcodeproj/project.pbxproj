@@ -34,11 +34,20 @@
 		DC1C2533CADED0964945BE46 /* PingViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940837FF4EFB20F224EC8D7A /* PingViewModels.swift */; };
 		0C0CD545F72546AD92E34876 /* SinglePingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F5AA1D35133494812EDF05 /* SinglePingView.swift */; };
 		34FF860F03C5954286E585D5 /* SubnetPingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A58EFF70915FC2B348D1D9 /* SubnetPingView.swift */; };
+		C42D2E151209A48FE40F7CB7 /* SubnetCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71771FFCCF2DB9637553CEBC /* SubnetCalculatorView.swift */; };
+		C285C1C885951CF1DD3B3ACA /* TracerouteDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B487F890B97F6F7E03E90E3 /* TracerouteDashboardView.swift */; };
+		512D0D501755CC2542D6899B /* TracerouteModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819DB4DE095DA7AD94E39C76 /* TracerouteModels.swift */; };
+		1A6849B23321A0622A017FFA /* TracerouteProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDB4E20B6E04FCABF331FF2 /* TracerouteProbe.swift */; };
+		F5C93F256617FD8316E34D98 /* TracerouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8E3B23493719F79EFBC8DD /* TracerouteViewModel.swift */; };
+		1B6FD703399211E7AEFEC269 /* WiFiDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875395286E62F0D25F3BA488 /* WiFiDashboardView.swift */; };
+		992B1A040211E9F70AD1B1C0 /* WiFiModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331EB71E637C935D459BF9C1 /* WiFiModels.swift */; };
+		A96360205C1F8C6F9E0AB2E9 /* WiFiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A50FBA58D35B87E9F12476D /* WiFiViewModel.swift */; };
 		222F0DBFFE5EB23DCD3FD16F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C36FFE920F24CEDB7CFDBFC /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		624A8F936E0903B5DF7F6FC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C06506FA15251EE1F35D00F6 /* NetWeiBao.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NetWeiBao.entitlements; sourceTree = "<group>"; };
 		11497D70DE15DDCB46A6092B /* NetWeiBaoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWeiBaoApp.swift; sourceTree = "<group>"; };
 		8D52667B18265B03E9ABD04D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		25C71E8A40548A11FA53C324 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
@@ -66,6 +75,14 @@
 		940837FF4EFB20F224EC8D7A /* PingViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingViewModels.swift; sourceTree = "<group>"; };
 		D1F5AA1D35133494812EDF05 /* SinglePingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePingView.swift; sourceTree = "<group>"; };
 		97A58EFF70915FC2B348D1D9 /* SubnetPingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubnetPingView.swift; sourceTree = "<group>"; };
+		71771FFCCF2DB9637553CEBC /* SubnetCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubnetCalculatorView.swift; sourceTree = "<group>"; };
+		7B487F890B97F6F7E03E90E3 /* TracerouteDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracerouteDashboardView.swift; sourceTree = "<group>"; };
+		819DB4DE095DA7AD94E39C76 /* TracerouteModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracerouteModels.swift; sourceTree = "<group>"; };
+		BCDB4E20B6E04FCABF331FF2 /* TracerouteProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracerouteProbe.swift; sourceTree = "<group>"; };
+		9F8E3B23493719F79EFBC8DD /* TracerouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracerouteViewModel.swift; sourceTree = "<group>"; };
+		875395286E62F0D25F3BA488 /* WiFiDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiDashboardView.swift; sourceTree = "<group>"; };
+		331EB71E637C935D459BF9C1 /* WiFiModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiModels.swift; sourceTree = "<group>"; };
+		4A50FBA58D35B87E9F12476D /* WiFiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiViewModel.swift; sourceTree = "<group>"; };
 		6C36FFE920F24CEDB7CFDBFC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38A007151ABE87CC01A5B6E9 /* NetWeiBao.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetWeiBao.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -112,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				624A8F936E0903B5DF7F6FC4,
+				C06506FA15251EE1F35D00F6,
 				11497D70DE15DDCB46A6092B,
 				8D52667B18265B03E9ABD04D,
 			);
@@ -138,6 +156,9 @@
 				D8FF20BAB00E9B3D319602F9,
 				346D548FE56AB5B8C33AD008,
 				24019A940DEEEA823AC0DA93,
+				9C9C6355F1844A0C011F674F,
+				A8C181F049D40939A940D832,
+				A9D3A5073C2E6C12B5B01897,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -195,6 +216,35 @@
 				97A58EFF70915FC2B348D1D9,
 			);
 			path = Ping;
+			sourceTree = "<group>";
+		};
+		9C9C6355F1844A0C011F674F /* Subnet */ = {
+			isa = PBXGroup;
+			children = (
+				71771FFCCF2DB9637553CEBC,
+			);
+			path = Subnet;
+			sourceTree = "<group>";
+		};
+		A8C181F049D40939A940D832 /* Traceroute */ = {
+			isa = PBXGroup;
+			children = (
+				7B487F890B97F6F7E03E90E3,
+				819DB4DE095DA7AD94E39C76,
+				BCDB4E20B6E04FCABF331FF2,
+				9F8E3B23493719F79EFBC8DD,
+			);
+			path = Traceroute;
+			sourceTree = "<group>";
+		};
+		A9D3A5073C2E6C12B5B01897 /* WiFi */ = {
+			isa = PBXGroup;
+			children = (
+				875395286E62F0D25F3BA488,
+				331EB71E637C935D459BF9C1,
+				4A50FBA58D35B87E9F12476D,
+			);
+			path = WiFi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,6 +344,14 @@
 				DC1C2533CADED0964945BE46 /* PingViewModels.swift in Sources */,
 				0C0CD545F72546AD92E34876 /* SinglePingView.swift in Sources */,
 				34FF860F03C5954286E585D5 /* SubnetPingView.swift in Sources */,
+				C42D2E151209A48FE40F7CB7 /* SubnetCalculatorView.swift in Sources */,
+				C285C1C885951CF1DD3B3ACA /* TracerouteDashboardView.swift in Sources */,
+				512D0D501755CC2542D6899B /* TracerouteModels.swift in Sources */,
+				1A6849B23321A0622A017FFA /* TracerouteProbe.swift in Sources */,
+				F5C93F256617FD8316E34D98 /* TracerouteViewModel.swift in Sources */,
+				1B6FD703399211E7AEFEC269 /* WiFiDashboardView.swift in Sources */,
+				992B1A040211E9F70AD1B1C0 /* WiFiModels.swift in Sources */,
+				A96360205C1F8C6F9E0AB2E9 /* WiFiViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NetWeiBao/App/NetWeiBao.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -434,6 +493,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NetWeiBao/App/NetWeiBao.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;

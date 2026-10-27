@@ -251,6 +251,52 @@ enum ICMPPacket {
         return reply.identifier == identifier && reply.sequence == sequence
     }
 
+    static func timeExceededInfo(
+        _ bytes: [UInt8],
+        length: Int
+    ) -> (identifier: UInt16, sequence: UInt16)? {
+        errorInfo(bytes, length: length, expectedType: 11)
+    }
+
+    static func destinationUnreachableInfo(
+        _ bytes: [UInt8],
+        length: Int
+    ) -> (identifier: UInt16, sequence: UInt16)? {
+        errorInfo(bytes, length: length, expectedType: 3)
+    }
+
+    private static func errorInfo(
+        _ bytes: [UInt8],
+        length: Int,
+        expectedType: UInt8
+    ) -> (identifier: UInt16, sequence: UInt16)? {
+        guard length >= 8, bytes.count >= length else { return nil }
+
+        var offset = 0
+        if length >= 20, bytes[0] >> 4 == 4 {
+            let headerLength = Int(bytes[0] & 0x0F) * 4
+            if headerLength >= 20, length >= headerLength + 8 {
+                offset = headerLength
+            }
+        }
+
+        guard length >= offset + 8, bytes[offset] == expectedType else { return nil }
+
+        // ICMP errors quote the original IP header + first 8 bytes of the datagram.
+        let quotedIPStart = offset + 8
+        guard quotedIPStart + 20 <= length, bytes[quotedIPStart] >> 4 == 4 else { return nil }
+
+        let quotedIPHeaderLength = Int(bytes[quotedIPStart] & 0x0F) * 4
+        guard quotedIPHeaderLength >= 20 else { return nil }
+
+        let quotedICMPStart = quotedIPStart + quotedIPHeaderLength
+        guard quotedICMPStart + 8 <= length else { return nil }
+
+        let identifier = UInt16(bytes[quotedICMPStart + 4]) << 8 | UInt16(bytes[quotedICMPStart + 5])
+        let sequence = UInt16(bytes[quotedICMPStart + 6]) << 8 | UInt16(bytes[quotedICMPStart + 7])
+        return (identifier, sequence)
+    }
+
     private static func checksum(_ bytes: [UInt8]) -> UInt16 {
         var sum: UInt32 = 0
         var index = 0

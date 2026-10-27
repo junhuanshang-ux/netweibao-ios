@@ -21,6 +21,7 @@ targets:
       - path: NetWeiBao
         excludes:
           - App/Info.plist
+          - App/NetWeiBao.entitlements
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.netweibao.app
@@ -33,6 +34,7 @@ targets:
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
         CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: NetWeiBao/App/NetWeiBao.entitlements
         ENABLE_PREVIEWS: YES
     scheme:
       testTargets: []

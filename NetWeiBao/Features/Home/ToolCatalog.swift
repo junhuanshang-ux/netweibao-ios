@@ -50,7 +50,7 @@ enum ToolCatalog {
             subtitle: "逐跳路径与延迟",
             icon: "arrow.triangle.branch",
             tint: Color(hex: 0x9B8CFF),
-            available: false,
+            available: true,
             details: "逐步增加 TTL，观察数据包经过的网关与路径延迟，定位跨网段故障点。",
             capabilities: [
                 "IPv4 逐跳追踪",
@@ -95,7 +95,7 @@ enum ToolCatalog {
             subtitle: "当前连接质量",
             icon: "wifi",
             tint: Color(hex: 0x4DD0E1),
-            available: false,
+            available: true,
             details: "查看当前 SSID、BSSID、信号强度与安全类型，并结合网关延迟评估无线链路。",
             capabilities: [
                 "当前网络身份与信号强度",
@@ -110,7 +110,7 @@ enum ToolCatalog {
             subtitle: "CIDR / 掩码换算",
             icon: "number.square",
             tint: Color(hex: 0x9CCC65),
-            available: false,
+            available: true,
             details: "在 CIDR、掩码、网络地址、广播地址与可用主机范围之间快速换算。",
             capabilities: [
                 "CIDR 与点分掩码互转",

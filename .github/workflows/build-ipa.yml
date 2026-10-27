@@ -12,8 +12,8 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-latest
-    timeout-minutes: 30
+    runs-on: macos-15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -23,6 +23,14 @@ jobs:
         run: |
           xcodebuild -version
           xcrun --sdk iphoneos --show-sdk-version
+
+      - name: Cache Xcode build
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ runner.os }}-xcode15-${{ hashFiles('NetWeiBao/**/*.swift', 'NetWeiBao.xcodeproj/project.pbxproj', 'NetWeiBao/App/Info.plist') }}
+          restore-keys: |
+            ${{ runner.os }}-xcode15-
 
       - name: Build app (unsigned)
         run: |
@@ -34,10 +42,13 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -derivedDataPath build \
+            -quiet \
             CONFIGURATION_BUILD_DIR="$PWD/build/Products" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            DEBUG_INFORMATION_FORMAT=dwarf \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             build
 
       - name: Package IPA

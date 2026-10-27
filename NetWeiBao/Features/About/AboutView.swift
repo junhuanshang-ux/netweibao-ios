@@ -72,8 +72,8 @@ struct AboutView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 8) {
-                    StatusBadge(text: "4 个模块已上线", color: AppTheme.accent)
-                    StatusBadge(text: "4 / 8 模块", color: AppTheme.blue)
+                    StatusBadge(text: "7 个模块已上线", color: AppTheme.accent)
+                    StatusBadge(text: "7 / 8 模块", color: AppTheme.blue)
                 }
                 .padding(.top, 2)
             }
