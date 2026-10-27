@@ -1,6 +1,5 @@
 import Darwin
 import Foundation
-import SystemConfiguration
 
 enum NetworkInterface {
     struct Info: Identifiable, Sendable {
@@ -84,29 +83,6 @@ enum NetworkInterface {
                 return lhs.score < rhs.score
             }
             .map(\.info)
-    }
-
-    /// Best-effort default gateway lookup from the system network state.
-    /// Falls back to `nil` when the sandbox or the current network does not expose it.
-    static func defaultGateway() -> IPv4Address? {
-        let store = SCDynamicStoreCreate(
-            nil,
-            "NetWeiBao" as CFString,
-            nil,
-            nil
-        )
-        guard let store,
-              let value = SCDynamicStoreCopyValue(
-                store,
-                "State:/Network/Global/IPv4" as CFString
-              ),
-              let dictionary = value as? [String: Any],
-              let router = dictionary["Router"] as? String,
-              let address = IPv4Address(router)
-        else {
-            return nil
-        }
-        return address
     }
 
     static func prefixLength(for mask: IPv4Address) -> Int {

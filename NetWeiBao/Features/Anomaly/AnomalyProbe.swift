@@ -318,6 +318,43 @@ enum EchoBurstProbe {
     }
 }
 
+enum GatewayDetector {
+    /// Best-effort LAN gateway guess: probe the first and last usable host in the subnet.
+    /// This avoids relying on unavailable iOS routing-table APIs.
+    static func detect(interface: NetworkInterface.Info?) async -> IPv4Address? {
+        guard let interface,
+              interface.name.hasPrefix("en") || interface.name.hasPrefix("bridge"),
+              (16...30).contains(interface.prefixLength)
+        else {
+            return nil
+        }
+
+        let first = interface.subnet.firstHost
+        let last = IPv4Address(value: interface.subnet.broadcast.value &- 1)
+        var candidates: [IPv4Address] = []
+        for candidate in [first, last] where candidate != interface.address && !candidates.contains(candidate) {
+            candidates.append(candidate)
+        }
+        guard !candidates.isEmpty else { return nil }
+
+        var reachable: [IPv4Address: Bool] = [:]
+        await withTaskGroup(of: (IPv4Address, Bool).self) { group in
+            for candidate in candidates {
+                group.addTask {
+                    let outcome = await PingEngine.shared.ping(candidate, timeout: 0.35)
+                    return (candidate, outcome.isSuccess)
+                }
+            }
+
+            for await result in group {
+                reachable[result.0] = result.1
+            }
+        }
+
+        return candidates.first { reachable[$0] == true }
+    }
+}
+
 enum AnomalyAnalyzer {
     static func analyze(
         mode: AnomalyMode,

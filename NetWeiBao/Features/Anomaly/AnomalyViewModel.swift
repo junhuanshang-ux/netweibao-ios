@@ -19,12 +19,9 @@ final class AnomalyViewModel: ObservableObject {
     init(mode: AnomalyMode) {
         self.mode = mode
         let info = NetworkInterface.activeIPv4()
-        let gateway = Self.lanGateway(for: info)
         self.localInfo = info
-        self.gateway = gateway
-        self.target = gateway?.description
-            ?? info?.subnet.firstHost.description
-            ?? ""
+        self.gateway = nil
+        self.target = info?.subnet.firstHost.description ?? ""
     }
 
     var suggestedTarget: String {
@@ -35,7 +32,7 @@ final class AnomalyViewModel: ObservableObject {
 
     func refreshInterface() {
         localInfo = NetworkInterface.activeIPv4()
-        gateway = Self.lanGateway(for: localInfo)
+        gateway = nil
         if target.isEmpty {
             target = suggestedTarget
         }
@@ -77,14 +74,24 @@ final class AnomalyViewModel: ObservableObject {
             let resolution = await HostResolver.resolveIPv4(input)
             guard !Task.isCancelled, self.runID == currentRun else { return }
 
-            let address: IPv4Address
+            let resolvedAddress: IPv4Address
             switch resolution {
             case .success(let resolved):
-                address = resolved
+                resolvedAddress = resolved
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
                 self.finish(currentRun)
                 return
+            }
+
+            let address: IPv4Address
+            if input == self.suggestedTarget,
+               let detected = await GatewayDetector.detect(interface: self.localInfo) {
+                address = detected
+                self.gateway = detected
+                self.target = detected.description
+            } else {
+                address = resolvedAddress
             }
 
             guard address != .broadcast,
@@ -163,14 +170,5 @@ final class AnomalyViewModel: ObservableObject {
         isRunning = false
         phase = .idle
         task = nil
-    }
-
-    private static func lanGateway(for info: NetworkInterface.Info?) -> IPv4Address? {
-        guard let info,
-              info.name.hasPrefix("en") || info.name.hasPrefix("bridge")
-        else {
-            return nil
-        }
-        return NetworkInterface.defaultGateway()
     }
 }
