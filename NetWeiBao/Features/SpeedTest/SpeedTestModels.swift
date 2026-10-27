@@ -9,16 +9,60 @@ enum SpeedTestMode: String, CaseIterable, Identifiable, Hashable, Sendable {
 
 enum SpeedTestPhase: Sendable {
     case idle
+    case resolving
     case latency
     case download
     case upload
     case analyzing
 }
 
+enum SpeedTestProvider: String, CaseIterable, Identifiable, Hashable, Sendable {
+    case speedTestCN = "测速网"
+    case libreSpeed = "LibreSpeed"
+
+    var id: String { rawValue }
+}
+
 struct SpeedTestNode: Sendable {
     let name: String
     let baseURL: URL
+    let downloadPath: String
+    let uploadPath: String
+    let pingPath: String
+    let downloadSizeParameter: String
     let referer: String?
+
+    init(
+        name: String,
+        baseURL: URL,
+        referer: String? = nil
+    ) {
+        self.name = name
+        self.baseURL = baseURL
+        self.downloadPath = "garbage.php"
+        self.uploadPath = "empty.php"
+        self.pingPath = "empty.php"
+        self.downloadSizeParameter = "ckSize"
+        self.referer = referer
+    }
+
+    init(
+        name: String,
+        baseURL: URL,
+        downloadPath: String,
+        uploadPath: String,
+        pingPath: String,
+        downloadSizeParameter: String,
+        referer: String?
+    ) {
+        self.name = name
+        self.baseURL = baseURL
+        self.downloadPath = downloadPath
+        self.uploadPath = uploadPath
+        self.pingPath = pingPath
+        self.downloadSizeParameter = downloadSizeParameter
+        self.referer = referer
+    }
 }
 
 struct SpeedTestTransfer: Sendable {

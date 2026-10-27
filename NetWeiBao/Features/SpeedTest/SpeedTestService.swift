@@ -50,8 +50,13 @@ final class SpeedTestService: @unchecked Sendable {
         let size = max(1, megabytes)
         let url = try makeURL(
             node: node,
-            path: "garbage.php",
-            query: [URLQueryItem(name: "ckSize", value: "\(size)")]
+            path: node.downloadPath,
+            query: [
+                URLQueryItem(
+                    name: node.downloadSizeParameter,
+                    value: "\(size)"
+                )
+            ]
         )
         let host = try connectionHost(for: url)
         let connection = makeConnection(host: host, url: url)
@@ -87,7 +92,7 @@ final class SpeedTestService: @unchecked Sendable {
         megabytes: Int = 50
     ) async throws -> SpeedTestTransfer {
         let size = max(1, megabytes)
-        let url = try makeURL(node: node, path: "empty.php", query: [])
+        let url = try makeURL(node: node, path: node.uploadPath, query: [])
         let host = try connectionHost(for: url)
         let body = Data(repeating: 0x5A, count: size * 1_024 * 1_024)
 
@@ -124,7 +129,7 @@ final class SpeedTestService: @unchecked Sendable {
     }
 
     private func latencySample(node: SpeedTestNode) async throws -> Double {
-        let url = try makeURL(node: node, path: "empty.php", query: [])
+        let url = try makeURL(node: node, path: node.pingPath, query: [])
         let host = try connectionHost(for: url)
         let connection = makeConnection(host: host, url: url)
         let timeoutTask = startTimeout(seconds: 10, connection: connection)

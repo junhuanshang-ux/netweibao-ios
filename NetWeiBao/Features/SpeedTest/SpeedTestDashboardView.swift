@@ -14,6 +14,9 @@ struct SpeedTestDashboardView: View {
                 VStack(spacing: 14) {
                     header
                     modePicker
+                    if viewModel.mode == .external {
+                        providerPicker
+                    }
                     nodeCard
                     actionCard
 
@@ -43,7 +46,7 @@ struct SpeedTestDashboardView: View {
                     }
 
                     InlineInfoNote(
-                        text: "外网默认使用第三方 LibreSpeed 洛杉矶 Sharktech 节点，已验证 100 MB 下载与 50 MB 上传；公共节点可能限速。内网需自建 LibreSpeed。测速会消耗较多流量。"
+                        text: "外网默认使用测速网（speedtest.cn）自动选择国内最近节点；也可切换 LibreSpeed。测速会消耗较多流量，节点接口变化时可能失败。"
                     )
                     .padding(.horizontal, 2)
                 }
@@ -58,6 +61,9 @@ struct SpeedTestDashboardView: View {
         .toolbar(.visible, for: .navigationBar)
         .onChange(of: viewModel.mode) { _ in
             viewModel.modeChanged()
+        }
+        .onChange(of: viewModel.provider) { _ in
+            viewModel.providerChanged()
         }
         .onDisappear {
             viewModel.cancel()
@@ -87,7 +93,10 @@ struct SpeedTestDashboardView: View {
 
             Spacer(minLength: 4)
 
-            StatusBadge(text: "LibreSpeed", color: tint)
+            StatusBadge(
+                text: viewModel.mode == .external ? viewModel.provider.rawValue : "内网",
+                color: tint
+            )
         }
         .padding(.vertical, 4)
     }
@@ -96,6 +105,17 @@ struct SpeedTestDashboardView: View {
         Picker("测速范围", selection: $viewModel.mode) {
             ForEach(SpeedTestMode.allCases) { mode in
                 Text(mode.rawValue).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .disabled(viewModel.isRunning)
+        .opacity(viewModel.isRunning ? 0.55 : 1)
+    }
+
+    private var providerPicker: some View {
+        Picker("节点来源", selection: $viewModel.provider) {
+            ForEach(SpeedTestProvider.allCases) { provider in
+                Text(provider.rawValue).tag(provider)
             }
         }
         .pickerStyle(.segmented)
@@ -117,7 +137,23 @@ struct SpeedTestDashboardView: View {
                     )
                 }
 
-                if viewModel.mode == .external {
+                if viewModel.mode == .external, viewModel.provider == .speedTestCN {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("自动")
+                            .font(.system(size: 9, weight: .medium, design: .rounded))
+                            .foregroundStyle(AppTheme.textTertiary)
+                        Text(viewModel.resolvedNodeName ?? "测速网 · 自动选择国内最近节点")
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundStyle(AppTheme.textPrimary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+
+                    Text("通过 speedtest.cn 网页节点接口自动选择距离最近的国内普通节点；节点接口变化时可能失败。")
+                        .font(.system(size: 10, weight: .regular, design: .rounded))
+                        .foregroundStyle(AppTheme.textTertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else if viewModel.mode == .external {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text("默认")
                             .font(.system(size: 9, weight: .medium, design: .rounded))
@@ -134,7 +170,7 @@ struct SpeedTestDashboardView: View {
                         .disabled(viewModel.isRunning)
                         .terminalField()
 
-                    Text("支持国内 LibreSpeed 节点：把地址替换成国内后端的 .../backend 即可。国内公共测速站多有反爬或限网，因此没有内置默认值。")
+                    Text("支持国内 LibreSpeed 节点：把地址替换成国内后端的 .../backend 即可。")
                         .font(.system(size: 10, weight: .regular, design: .rounded))
                         .foregroundStyle(AppTheme.textTertiary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -449,6 +485,8 @@ private extension SpeedTestPhase {
         switch self {
         case .idle:
             return 0
+        case .resolving:
+            return 0.05
         case .latency:
             return 0.15
         case .download:

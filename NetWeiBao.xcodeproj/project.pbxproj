@@ -46,6 +46,7 @@
 		2FB3CDF8DFE35EC44DEC4227 /* ReportPDFRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05DA236F446DAE6581BD71C /* ReportPDFRenderer.swift */; };
 		78226B42C39B6C74C2DBFE6F /* ReportRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339B2D027920F6607829C6AB /* ReportRunner.swift */; };
 		E099E8EE1EB795FAA968E1A9 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B5693C25E55C7141BBAF10 /* ReportViewModel.swift */; };
+		00EEC9A4B5D6E072DFA39FB3 /* SpeedTestCNService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FAA878300EE6B51DA00B09 /* SpeedTestCNService.swift */; };
 		E44018EFE30D4DBCB91E878E /* SpeedTestDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9EC85E911C267E89436DC6 /* SpeedTestDashboardView.swift */; };
 		E4F71020A520999592EF8505 /* SpeedTestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E4090B5CEA5DF2BC679EA /* SpeedTestModels.swift */; };
 		A22B261A2B25B70497CDD22B /* SpeedTestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77086BFB6E262E469952240 /* SpeedTestService.swift */; };
@@ -103,6 +104,7 @@
 		B05DA236F446DAE6581BD71C /* ReportPDFRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPDFRenderer.swift; sourceTree = "<group>"; };
 		339B2D027920F6607829C6AB /* ReportRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRunner.swift; sourceTree = "<group>"; };
 		B3B5693C25E55C7141BBAF10 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
+		03FAA878300EE6B51DA00B09 /* SpeedTestCNService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedTestCNService.swift; sourceTree = "<group>"; };
 		8C9EC85E911C267E89436DC6 /* SpeedTestDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedTestDashboardView.swift; sourceTree = "<group>"; };
 		484E4090B5CEA5DF2BC679EA /* SpeedTestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedTestModels.swift; sourceTree = "<group>"; };
 		F77086BFB6E262E469952240 /* SpeedTestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedTestService.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 		00830CB566A63B6A939F3947 /* SpeedTest */ = {
 			isa = PBXGroup;
 			children = (
+				03FAA878300EE6B51DA00B09,
 				8C9EC85E911C267E89436DC6,
 				484E4090B5CEA5DF2BC679EA,
 				F77086BFB6E262E469952240,
@@ -428,6 +431,7 @@
 				2FB3CDF8DFE35EC44DEC4227 /* ReportPDFRenderer.swift in Sources */,
 				78226B42C39B6C74C2DBFE6F /* ReportRunner.swift in Sources */,
 				E099E8EE1EB795FAA968E1A9 /* ReportViewModel.swift in Sources */,
+				00EEC9A4B5D6E072DFA39FB3 /* SpeedTestCNService.swift in Sources */,
 				E44018EFE30D4DBCB91E878E /* SpeedTestDashboardView.swift in Sources */,
 				E4F71020A520999592EF8505 /* SpeedTestModels.swift in Sources */,
 				A22B261A2B25B70497CDD22B /* SpeedTestService.swift in Sources */,

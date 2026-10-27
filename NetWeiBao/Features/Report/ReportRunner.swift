@@ -358,11 +358,19 @@ enum ReportRunner {
 
     private static func quickSpeedResult() async -> ReportTestResult {
         let startedAt = Date()
-        let node = SpeedTestNode(
-            name: "洛杉矶 · Sharktech (LibreSpeed)",
-            baseURL: URL(string: SpeedTestViewModel.defaultExternalURL)!,
-            referer: nil
-        )
+        let node: SpeedTestNode
+        var nodeNote = "报告使用测速网自动选择的国内节点。"
+
+        do {
+            node = try await SpeedTestCNService.shared.resolveNode()
+        } catch {
+            node = SpeedTestNode(
+                name: "洛杉矶 · Sharktech (LibreSpeed)",
+                baseURL: URL(string: SpeedTestViewModel.defaultExternalURL)!,
+                referer: nil
+            )
+            nodeNote = "测速网节点解析失败，已回退到 LibreSpeed：\(error.localizedDescription)"
+        }
 
         do {
             let latency = try await SpeedTestService.shared.measureLatency(
@@ -393,7 +401,10 @@ enum ReportRunner {
                     ReportMetric(label: "数据量", value: "\(reportSpeedDownloadMB) MB / \(reportSpeedUploadMB) MB"),
                     ReportMetric(label: "节点", value: node.name)
                 ],
-                details: ["报告使用快速测速，避免一键检测消耗过多流量。"],
+                details: [
+                    "报告使用快速测速，避免一键检测消耗过多流量。",
+                    nodeNote
+                ],
                 duration: Date().timeIntervalSince(startedAt)
             )
         } catch {
