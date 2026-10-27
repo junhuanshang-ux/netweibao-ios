@@ -18,6 +18,7 @@
 
 - 仓库：[junhuanshang-ux/netweibao-ios](https://github.com/junhuanshang-ux/netweibao-ios)
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
+- 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地已下载：[NetWeiBao-unsigned.ipa](dist/NetWeiBao-unsigned.ipa)
 - SHA-256：`6378be2fc8394af8059c4834f4ad8b20bd657af905a741a5a9d142e7740cf650`
 
