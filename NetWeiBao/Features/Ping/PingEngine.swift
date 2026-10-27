@@ -194,7 +194,7 @@ final class PingEngine: @unchecked Sendable {
     }
 }
 
-private enum ICMPPacket {
+enum ICMPPacket {
     static func echoRequest(
         identifier: UInt16,
         sequence: UInt16,
@@ -219,13 +219,11 @@ private enum ICMPPacket {
         return bytes
     }
 
-    static func isEchoReply(
+    static func echoReplyInfo(
         _ bytes: [UInt8],
-        length: Int,
-        identifier: UInt16,
-        sequence: UInt16
-    ) -> Bool {
-        guard length >= 8, bytes.count >= length else { return false }
+        length: Int
+    ) -> (identifier: UInt16, sequence: UInt16)? {
+        guard length >= 8, bytes.count >= length else { return nil }
 
         var offset = 0
         if length >= 20, bytes[0] >> 4 == 4 {
@@ -235,12 +233,22 @@ private enum ICMPPacket {
             }
         }
 
-        guard length >= offset + 8 else { return false }
-        guard bytes[offset] == 0, bytes[offset + 1] == 0 else { return false }
+        guard length >= offset + 8 else { return nil }
+        guard bytes[offset] == 0, bytes[offset + 1] == 0 else { return nil }
 
         let replyIdentifier = UInt16(bytes[offset + 4]) << 8 | UInt16(bytes[offset + 5])
         let replySequence = UInt16(bytes[offset + 6]) << 8 | UInt16(bytes[offset + 7])
-        return replyIdentifier == identifier && replySequence == sequence
+        return (replyIdentifier, replySequence)
+    }
+
+    static func isEchoReply(
+        _ bytes: [UInt8],
+        length: Int,
+        identifier: UInt16,
+        sequence: UInt16
+    ) -> Bool {
+        guard let reply = echoReplyInfo(bytes, length: length) else { return false }
+        return reply.identifier == identifier && reply.sequence == sequence
     }
 
     private static func checksum(_ bytes: [UInt8]) -> UInt16 {

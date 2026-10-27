@@ -65,14 +65,14 @@ enum ToolCatalog {
             subtitle: "路径回环启发式分析",
             icon: "arrow.triangle.2.circlepath",
             tint: AppTheme.amber,
-            available: false,
-            details: "通过重复跳、网关响应异常与多目标路径分析，识别疑似二层环路。",
+            available: true,
+            details: "通过基线采样、广播重复回声与链路质量变化，识别疑似二层环路。",
             capabilities: [
-                "追踪路径重复节点",
-                "网关响应异常检测",
-                "多目标路径对比"
+                "网关基线采样",
+                "广播重复回声检测",
+                "广播前后链路对比"
             ],
-            feasibility: "无法读取交换机 MAC 表或 STP 状态，只能做基于路径与链路的启发式判断，不能替代专业抓包。"
+            feasibility: "无法读取交换机 MAC 表或 STP 状态，只能做基于重复回声与链路质量的启发式判断，不能确认环路。"
         ),
         ToolItem(
             id: "storm",
@@ -80,14 +80,14 @@ enum ToolCatalog {
             subtitle: "链路质量代理指标",
             icon: "bolt.circle",
             tint: AppTheme.danger,
-            available: false,
-            details: "通过延迟、抖动、丢包与吞吐变化，判断局域网是否存在广播/组播风暴迹象。",
+            available: true,
+            details: "通过低强度广播探测前后的网关质量变化，识别疑似广播风暴或链路拥塞。",
             capabilities: [
-                "链路延迟与抖动采样",
-                "网关与多目标对比",
-                "异常时段记录"
+                "低强度广播探测",
+                "广播前后质量对比",
+                "重复回复统计"
             ],
-            feasibility: "公开 API 无法抓包或开启混杂模式。将提供链路质量代理指标，无法替代端口镜像抓包分析。"
+            feasibility: "公开 API 无法抓包或开启混杂模式。只提供链路质量代理指标，无法替代端口镜像抓包分析。"
         ),
         ToolItem(
             id: "wifi",
