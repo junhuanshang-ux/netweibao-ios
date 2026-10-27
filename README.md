@@ -4,9 +4,33 @@
   <img src="NetWeiBao/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" width="120" alt="网维宝 App Icon">
 </p>
 
+<p align="center">
+  <img src="https://github.com/junhuanshang-ux/netweibao-ios/actions/workflows/build-ipa.yml/badge.svg" alt="Build unsigned IPA">
+</p>
+
 面向现场网络工程师的 iPhone 诊断工具箱。当前版本聚焦第 1 个模块：**Ping（单机 / 网段 / 批量）**，其余模块按顺序接入。
 
 > 工程是原生 SwiftUI，最低 iOS 16.0。所有网络探测均使用 Apple 公开 API，不包含私有 API、越狱依赖或第三方统计 SDK。
+
+---
+
+## 下载与安装（GitHub Actions）
+
+- 仓库：[junhuanshang-ux/netweibao-ios](https://github.com/junhuanshang-ux/netweibao-ios)
+- 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
+- 本地已下载：[NetWeiBao-unsigned.ipa](dist/NetWeiBao-unsigned.ipa)
+- SHA-256：`6378be2fc8394af8059c4834f4ad8b20bd657af905a741a5a9d142e7740cf650`
+
+构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
+
+1. 用 `xcodebuild` 编译 Release 版；
+2. 打包成 `NetWeiBao-unsigned.ipa`；
+3. 上传 artifact；
+4. 创建带 IPA 和 SHA-256 的 GitHub Release。
+
+> **这是未签名（ad-hoc）IPA，不能直接双击安装。** 需要用 Sideloadly / AltStore / TrollStore（视 iOS 版本）重签安装；免费 Apple ID 签名通常 7 天有效，过期需重签。也可以在 Mac 上打开 Xcode 工程直接 Run。
+
+Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完成。
 
 ---
 
@@ -66,6 +90,14 @@ xcodebuild \
   build
 ```
 
+在 macOS 上直接打未签名 IPA：
+
+```bash
+bash scripts/build-ipa.sh
+```
+
+产物：`dist/NetWeiBao-unsigned.ipa`。
+
 ---
 
 ## 目录结构
@@ -78,12 +110,19 @@ NetWeiBao/
 │   ├── Home/                # 工作台、工具目录、占位页
 │   ├── Ping/                # Ping 引擎、模型、三个模式的 UI
 │   └── About/               # 关于与 iOS 能力边界
-└── Assets.xcassets/         # AppIcon、AccentColor
+└── Assets.xcassets/         # AppIcon、AccentColor、LaunchBackground
+
+.github/workflows/
+└── build-ipa.yml            # GitHub Actions 未签名 IPA 构建 + Release
 
 scripts/
+├── build-ipa.sh             # macOS 本地构建 IPA
 ├── generate_xcodeproj.py    # 无 Xcode 环境下生成 .xcodeproj
 ├── generate_app_icon.py     # 生成 1024×1024 图标
 └── validate_project.py      # 工程 / 资源 / 配置静态检查
+
+builder.json                 # iBuilder / 仓库构建元数据
+dist/                        # 本地下载的 IPA（不提交到 git）
 
 docs/
 └── FEASIBILITY.md           # 八个模块的 iOS 可行性、限制与建议

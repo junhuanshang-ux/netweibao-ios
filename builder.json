@@ -1,0 +1,31 @@
+{
+  "project_name": "NetWeiBao",
+  "repository": "https://github.com/junhuanshang-ux/netweibao-ios",
+  "repo": {
+    "owner": "junhuanshang-ux",
+    "name": "netweibao-ios",
+    "branch": "main"
+  },
+  "github": {
+    "authenticated": true
+  },
+  "build": {
+    "workflow_id": "build-ipa.yml",
+    "branch": "main",
+    "scheme": "NetWeiBao",
+    "configuration": "Release",
+    "build_mode": "release",
+    "project_type": "xcode"
+  },
+  "ios": {
+    "minimum_version": "16.0",
+    "target_version": "16.0",
+    "devices": [
+      "iPhone"
+    ]
+  },
+  "ai": {
+    "enabled": false,
+    "auto_fix": false
+  }
+}
