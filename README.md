@@ -146,7 +146,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - 外网默认节点：**东京 A573 LibreSpeed**（`https://librespeed.a573.net/backend`）。
 - **支持中国内节点**：把外网后端地址改成国内 LibreSpeed 的 `.../backend` 即可；国内公共测速站多有限网/反爬，所以没有内置固定地址。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
-- 测试流程：5 次延迟采样 → 10 MB 下载 → 4 MB 上传。
+- 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载/上传大小可在测速页手动调节。
 - 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
 - 公共节点可能限速，结果不能直接等同运营商带宽。
 
@@ -258,7 +258,7 @@ docs/
 - WiFi 只读取当前连接，不能扫描周边 AP；需要“精确”定位权限和 Access WiFi Information entitlement。
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
 - 外网测速默认使用第三方 LibreSpeed 公共节点，可能被限速或临时不可用；内网测速必须在局域网自建 LibreSpeed 后端。
-- 测速会消耗流量（默认下载 10 MB + 上传 4 MB），且结果受节点、WiFi、运营商和当前负载影响。
+- 测速会消耗流量（默认下载 100 MB + 上传 50 MB），且结果受节点、WiFi、运营商和当前负载影响；可在测速页调小。
 - 扫描/测速结果仅保存在内存，退出 App 后不保留。
 - App 进入后台后系统可能挂起探测，长时间扫描请保持前台。
 - 这是网络诊断工具，不替代交换机侧抓包、端口镜像或厂商网管系统。

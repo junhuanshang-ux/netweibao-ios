@@ -8,8 +8,8 @@ final class SpeedTestService: @unchecked Sendable {
 
     private init() {
         let configuration = URLSessionConfiguration.ephemeral
-        configuration.timeoutIntervalForRequest = 30
-        configuration.timeoutIntervalForResource = 90
+        configuration.timeoutIntervalForRequest = 60
+        configuration.timeoutIntervalForResource = 300
         configuration.waitsForConnectivity = false
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         configuration.urlCache = nil
@@ -57,7 +57,7 @@ final class SpeedTestService: @unchecked Sendable {
 
     func download(
         node: SpeedTestNode,
-        megabytes: Int = 10
+        megabytes: Int = 100
     ) async throws -> SpeedTestTransfer {
         let size = max(1, megabytes)
         let url = try makeURL(
@@ -68,7 +68,7 @@ final class SpeedTestService: @unchecked Sendable {
             ]
         )
         var request = makeRequest(url: url, node: node, method: "GET")
-        request.timeoutInterval = 90
+        request.timeoutInterval = 300
 
         try Task.checkCancellation()
         let startedAt = DispatchTime.now().uptimeNanoseconds
@@ -84,7 +84,7 @@ final class SpeedTestService: @unchecked Sendable {
 
     func upload(
         node: SpeedTestNode,
-        megabytes: Int = 4
+        megabytes: Int = 50
     ) async throws -> SpeedTestTransfer {
         let size = max(1, megabytes)
         let url = try makeURL(
@@ -93,7 +93,7 @@ final class SpeedTestService: @unchecked Sendable {
             query: []
         )
         var request = makeRequest(url: url, node: node, method: "POST")
-        request.timeoutInterval = 90
+        request.timeoutInterval = 300
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
 
         let body = Data(repeating: 0x5A, count: size * 1_024 * 1_024)

@@ -8,6 +8,8 @@ final class SpeedTestViewModel: ObservableObject {
     @Published var mode: SpeedTestMode = .external
     @Published var externalURL = SpeedTestViewModel.defaultExternalURL
     @Published var internalURL = ""
+    @Published var downloadMegabytes = 100
+    @Published var uploadMegabytes = 50
     @Published private(set) var phase: SpeedTestPhase = .idle
     @Published private(set) var isRunning = false
     @Published private(set) var externalResult: SpeedTestResult?
@@ -37,6 +39,25 @@ final class SpeedTestViewModel: ObservableObject {
 
     var canStart: Bool {
         !activeURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var sizeSummary: String {
+        "下载 \(downloadMegabytes) MB · 上传 \(uploadMegabytes) MB · 延迟 5 次"
+    }
+
+    var phaseText: String {
+        switch phase {
+        case .idle:
+            return "等待开始"
+        case .latency:
+            return "1/3 延迟采样"
+        case .download:
+            return "2/3 下载 \(downloadMegabytes) MB"
+        case .upload:
+            return "3/3 上传 \(uploadMegabytes) MB"
+        case .analyzing:
+            return "整理结果…"
+        }
     }
 
     func modeChanged() {
@@ -77,6 +98,8 @@ final class SpeedTestViewModel: ObservableObject {
         let currentRun = UUID()
         runID = currentRun
         let mode = self.mode
+        let downloadSize = min(max(downloadMegabytes, 1), 1_024)
+        let uploadSize = min(max(uploadMegabytes, 1), 1_024)
         let node = SpeedTestNode(
             name: nodeName,
             baseURL: url,
@@ -97,14 +120,14 @@ final class SpeedTestViewModel: ObservableObject {
                 self.phase = .download
                 let download = try await SpeedTestService.shared.download(
                     node: node,
-                    megabytes: 10
+                    megabytes: downloadSize
                 )
                 guard !Task.isCancelled, self.runID == currentRun else { return }
 
                 self.phase = .upload
                 let upload = try await SpeedTestService.shared.upload(
                     node: node,
-                    megabytes: 4
+                    megabytes: uploadSize
                 )
                 guard !Task.isCancelled, self.runID == currentRun else { return }
 

@@ -32,7 +32,7 @@ struct SpeedTestDashboardView: View {
                             EmptyStateView(
                                 icon: "speedometer",
                                 title: "等待开始测速",
-                                message: "下载 10 MB、上传 4 MB，并采样 5 次延迟。"
+                                message: "默认下载 100 MB、上传 50 MB，并采样 5 次延迟。"
                             )
                         }
                     }
@@ -43,7 +43,7 @@ struct SpeedTestDashboardView: View {
                     }
 
                     InlineInfoNote(
-                        text: "外网默认使用第三方 LibreSpeed 东京节点，公共节点可能限速；内网需在 NAS/路由器/电脑上自建 LibreSpeed，并填写 .../backend 地址。测速会消耗流量。"
+                        text: "外网默认使用第三方 LibreSpeed 东京节点，公共节点可能限速；内网需自建 LibreSpeed。默认下载 100 MB、上传 50 MB，可在节点卡中调节；测速会消耗较多流量。"
                     )
                     .padding(.horizontal, 2)
                 }
@@ -154,9 +154,63 @@ struct SpeedTestDashboardView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Text("下载 10 MB · 上传 4 MB · 延迟采样 5 次")
+                Divider().background(AppTheme.stroke)
+
+                HStack(spacing: 14) {
+                    sizePicker(
+                        title: "下载",
+                        value: $viewModel.downloadMegabytes,
+                        options: [10, 25, 50, 100, 200, 500]
+                    )
+
+                    sizePicker(
+                        title: "上传",
+                        value: $viewModel.uploadMegabytes,
+                        options: [5, 10, 25, 50, 100, 200]
+                    )
+
+                    Spacer(minLength: 0)
+                }
+                .disabled(viewModel.isRunning)
+
+                Text(viewModel.sizeSummary)
                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                     .foregroundStyle(AppTheme.textTertiary)
+            }
+        }
+    }
+
+    private func sizePicker(
+        title: String,
+        value: Binding<Int>,
+        options: [Int]
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .font(.system(size: 9, weight: .medium, design: .rounded))
+                .foregroundStyle(AppTheme.textTertiary)
+
+            Menu {
+                ForEach(options, id: \.self) { option in
+                    Button("\(option) MB") {
+                        value.wrappedValue = option
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text("\(value.wrappedValue) MB")
+                        .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(AppTheme.textTertiary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(Color.white.opacity(0.05))
+                )
             }
         }
     }
@@ -173,6 +227,15 @@ struct SpeedTestDashboardView: View {
                 .foregroundStyle(AppTheme.textSecondary)
                 .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
+
+                Text("本次将传输：\(viewModel.sizeSummary)")
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundStyle(AppTheme.textTertiary)
+
+                Text("测速使用系统路由；首页“切换网卡”只影响 Ping / DHCP / 路由追踪 / 环路 / 风暴，不改变测速出口。")
+                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .foregroundStyle(AppTheme.amber)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 Button {
                     if viewModel.isRunning {
@@ -203,7 +266,7 @@ struct SpeedTestDashboardView: View {
 
                     Spacer()
 
-                    Text(viewModel.phase.label)
+                    Text(viewModel.phaseText)
                         .font(.system(size: 10, weight: .regular, design: .rounded))
                         .foregroundStyle(AppTheme.textTertiary)
                 }
@@ -396,18 +459,4 @@ private extension SpeedTestPhase {
         }
     }
 
-    var label: String {
-        switch self {
-        case .idle:
-            return "等待开始"
-        case .latency:
-            return "1/3 延迟采样"
-        case .download:
-            return "2/3 下载 10 MB"
-        case .upload:
-            return "3/3 上传 4 MB"
-        case .analyzing:
-            return "整理结果…"
-        }
-    }
 }
