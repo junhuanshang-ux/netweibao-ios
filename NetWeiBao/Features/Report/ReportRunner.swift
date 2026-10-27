@@ -10,7 +10,7 @@ enum ReportRunner {
 
     static func run(
         speedProvider: SpeedTestProvider = .speedTestCN,
-        speedLibreURL: String = SpeedTestViewModel.defaultExternalURL,
+        speedLibreURL: String = "https://laxspeed.sharktech.net/backend",
         onProgress: @escaping @MainActor (ReportProgress) -> Void
     ) async throws -> ReportSnapshot {
         let info = NetworkInterface.activeIPv4()
