@@ -58,7 +58,9 @@ jobs:
           test -d "$APP_DIR"
           rm -rf out && mkdir -p out/Payload
           cp -R "$APP_DIR" out/Payload/
-          codesign --force --sign - --timestamp=none out/Payload/NetWeiBao.app || true
+          codesign --force --sign - --timestamp=none \
+            --entitlements "$PWD/NetWeiBao/App/NetWeiBao.entitlements" \
+            out/Payload/NetWeiBao.app
           ( cd out && zip -qry ../NetWeiBao-unsigned.ipa Payload )
           shasum -a 256 NetWeiBao-unsigned.ipa | tee NetWeiBao-unsigned.ipa.sha256
           ls -lh NetWeiBao-unsigned.ipa

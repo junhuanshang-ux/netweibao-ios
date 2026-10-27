@@ -41,7 +41,9 @@ echo "==> Package"
 rm -rf "$BUILD_DIR/out"
 mkdir -p "$BUILD_DIR/out/Payload" "$DIST_DIR"
 cp -R "$APP_DIR" "$BUILD_DIR/out/Payload/"
-codesign --force --sign - --timestamp=none "$BUILD_DIR/out/Payload/$APP_NAME.app" 2>/dev/null || true
+codesign --force --sign - --timestamp=none \
+  --entitlements "$ROOT/NetWeiBao/App/NetWeiBao.entitlements" \
+  "$BUILD_DIR/out/Payload/$APP_NAME.app"
 ( cd "$BUILD_DIR/out" && zip -qry "$DIST_DIR/$APP_NAME-unsigned.ipa" Payload )
 shasum -a 256 "$DIST_DIR/$APP_NAME-unsigned.ipa" | tee "$DIST_DIR/$APP_NAME-unsigned.ipa.sha256"
 
