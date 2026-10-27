@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`ba1f3a9ee1d59518b394a136ba9bb44b7fee97774f7470af96f50a261d67a73d`
+- SHA-256：`b6f64f23d5b5ebb46fe459667c74d51d3140868a7ff0381f79da5eed876936c9`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -65,10 +65,24 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 ### 环路 / 风暴已实现
 
-- **环路检测**：网关基线采样 → 8 个低强度广播 Echo → 网关复测；检测同源同序号重复 Echo Reply，并结合丢包、延迟、抖动给出“未发现 / 疑似 / 无法判断”。
-- **风暴检测**：比较低强度广播探测前后的网关丢包、延迟、抖动，并统计重复回复，识别疑似广播风暴或链路拥塞。
+- **环路检测**：网关基线 → 10 个单播重复回声 → 8 个广播回声 → 网关复测；检测同源同序号重复 Echo Reply，并结合丢包、延迟、抖动给出“未发现 / 疑似 / 无法判断”。
+- **风暴检测**：比较单播/广播探测前后的网关丢包、延迟、抖动，并统计重复回复，识别疑似广播风暴或链路拥塞。
+- **目标自动探测**：默认目标不再死用 `.1`，开始检测时会同时探测网段第一个和最后一个地址（常见 `.1` / `.254`），优先使用有响应的候选。
+- **广播无响应不再直接判“无法判断”**：广播 ICMP 被过滤时，结论主要依据单播重复回声与链路质量，并在结果页明确提示“广播级证据缺失”。
+- 每次检测会给出“下一步建议”，例如确认网关、检查 STP/MAC 表、排查 Wi-Fi 重传、使用端口镜像等。
 - 两个模块都明确标注为**启发式 / 代理指标**，不会输出“确认环路”或“确认风暴”的虚假结论。
 - 受 iOS 限制，无法读取交换机 MAC/STP，也无法抓包；真正的二层定位仍需交换机命令、端口镜像或探针。
+
+### 为什么之前两个都显示“无法判断”？
+
+旧版本只依赖 `255.255.255.255` 的广播 Echo Reply，而很多网络/终端会直接过滤广播 ICMP；旧逻辑把“没有广播回复”当成了无法判断。另一个原因是默认目标只是网段第一个地址，未必是真实网关。
+
+现在已改为：
+
+1. 自动尝试 `.1` / `.254` 两个常见网关候选；
+2. 增加目标单播重复回声检测，不再依赖广播回复；
+3. 广播无响应只降低置信度，不再直接返回“无法判断”；
+4. 结果页显示具体原因和下一步建议。
 
 ---
 
