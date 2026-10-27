@@ -13,7 +13,7 @@
 | 5 | 风暴检测 | ✅ 已实现（代理指标） | 广播前后链路质量对比 | 无 BPF / 混杂模式 / 端口镜像 |
 | 6 | WiFi 分析 | ✅ 已实现（仅当前连接） | `NEHotspotNetwork` + 网关质量 | 不能扫描周边 AP；需定位权限与 entitlement |
 | 7 | 子网计算 | ✅ 已实现 | 纯本地 IPv4/CIDR 计算 | 无 |
-| 8 | 内外网测速 | ✅ 有条件 | `URLSession` 对自建/授权端点 | 需要测速服务端与流量；公共 API 授权 |
+| 8 | 内外网测速 | ✅ 已实现 | LibreSpeed 后端（默认东京公共节点） | 公共节点可能限速；内网需自建后端；消耗流量 |
 
 ---
 
@@ -154,8 +154,8 @@ iOS App 没有 BPF / promiscuous mode / raw Ethernet 权限，所以无法实现
 
 - 读取当前 SSID、BSSID、是否加密、是否自动加入、信号强度。
 - 对网关做 6 次采样，展示平均延迟、丢包与抖动。
-- 请求定位权限；工程已加入 `com.apple.developer.networking.wifi-info` entitlement。
-- 读取失败时显示原因，不伪造 SSID；模拟器通常返回空。
+- 请求“精确”定位权限；工程已加入 `com.apple.developer.networking.wifi-info` entitlement，并提供临时精确位置请求。
+- 读取失败时仍显示 `en0` 接口、IP、网段、网关与链路质量，不伪造 SSID；模拟器通常返回空。
 - 重新签名时，provisioning profile 也需要包含 WiFi Info entitlement。
 
 **可用公开能力**
@@ -193,6 +193,15 @@ iOS App 没有 BPF / promiscuous mode / raw Ethernet 权限，所以无法实现
 ---
 
 ## 8. 内外网测速
+
+**已实现**
+
+- 外网默认节点：东京 A573 LibreSpeed（`https://librespeed.a573.net/backend`），已验证 10 MB 下载与 4 MB 上传。
+- 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址。
+- 流程：5 次延迟采样 → 10 MB 下载 → 4 MB 上传。
+- 结果：下载/上传 Mbps、平均延迟、抖动、丢包、传输字节、耗时；内网/外网结果可对比。
+- 使用 Safari UA + Referer 访问 LibreSpeed 后端；公共节点可能限速或临时不可用。
+- `NSAllowsLocalNetworking` 允许局域网 HTTP 测速；公网默认 HTTPS。
 
 **可行路径**
 

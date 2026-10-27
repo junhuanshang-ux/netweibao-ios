@@ -8,7 +8,7 @@
   <img src="https://github.com/junhuanshang-ux/netweibao-ios/actions/workflows/build-ipa.yml/badge.svg" alt="Build unsigned IPA">
 </p>
 
-面向现场网络工程师的 iPhone 诊断工具箱。当前版本已完成 **Ping（单机 / 网段 / 批量）**、**DHCP 服务器检测**、**环路 / 风暴启发式检测**、**路由追踪**、**子网计算** 与 **WiFi 分析**，只差内外网测速。
+面向现场网络工程师的 iPhone 诊断工具箱。8 个模块已全部上线：Ping、DHCP、路由追踪、环路、风暴、WiFi 分析、子网计算、内外网测速。
 
 > 工程是原生 SwiftUI，最低 iOS 16.0。所有网络探测均使用 Apple 公开 API，不包含私有 API、越狱依赖或第三方统计 SDK。
 
@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`4bfa8da3904ad9ac4e074849deda63131da32b77b31832cd902ba61c5a50e569`
+- SHA-256：`aaa78a574c7f53bc2d71f070da866ee25fee10178aaecebd74a024b128f3f7d9`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -42,7 +42,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - `xcodebuild -quiet`，关闭 dSYM 和 index store；
 - 只保留一个 workflow，`concurrency` 自动取消旧构建。
 
-本次从触发到 IPA 发布约 **65 秒**。GitHub 托管 runner 的排队仍可能受平台负载影响，但不会再像之前那样长时间卡在 queued。
+本次从触发到 IPA 发布约 **55 秒**。GitHub 托管 runner 的排队仍可能受平台负载影响，但不会再像之前那样长时间卡在 queued。
 
 ---
 
@@ -57,7 +57,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 | 5 | 网络风暴检测 | ✅ 已完成（链路质量代理，受 iOS 限制） |
 | 6 | WiFi 分析 | ✅ 已完成（仅当前连接） |
 | 7 | 子网计算 | ✅ 已完成 |
-| 8 | 内外网测速 | ⏳ 待开发 |
+| 8 | 内外网测速 | ✅ 已完成 |
 
 ### Ping 已实现
 
@@ -112,8 +112,18 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 - 读取当前 SSID、BSSID、是否加密、是否自动加入、信号强度。
 - 对网关做 6 次采样，展示平均延迟、丢包与抖动。
-- 需要定位权限；SSID/BSSID 还需要 **Access WiFi Information** entitlement（已加入工程）。
+- 需要“精确”定位权限；SSID/BSSID 还需要 **Access WiFi Information** entitlement（已加入工程）。
+- **SSID 读取失败时不再整页不可用**：仍显示 `en0` 接口、本机 IP、网段、推测网关和网关质量。
+- 提供“允许 / 精确位置 / 去设置 / 刷新”操作入口。
 - iOS 不允许扫描周边 AP；模拟器通常无法返回 SSID。
+
+### 内外网测速已实现
+
+- 外网默认节点：**东京 A573 LibreSpeed**（`https://librespeed.a573.net/backend`）。
+- 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
+- 测试流程：5 次延迟采样 → 10 MB 下载 → 4 MB 上传。
+- 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
+- 公共节点可能限速，结果不能直接等同运营商带宽。
 
 ---
 
@@ -218,9 +228,11 @@ docs/
 - iOS 会在首次访问局域网时弹“本地网络”权限；拒绝后探测会失败。
 - 当前只支持 IPv4；IPv6 尚未接入。
 - 路由追踪依赖 iOS 是否向非特权 ICMP socket 暴露 `Time Exceeded`；不暴露时只能显示 `*`，不能伪造跳点。
-- WiFi 只读取当前连接，不能扫描周边 AP；需要定位权限和 Access WiFi Information entitlement。
+- WiFi 只读取当前连接，不能扫描周边 AP；需要“精确”定位权限和 Access WiFi Information entitlement。
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
-- 扫描结果仅保存在内存，退出 App 后不保留。
+- 外网测速默认使用第三方 LibreSpeed 公共节点，可能被限速或临时不可用；内网测速必须在局域网自建 LibreSpeed 后端。
+- 测速会消耗流量（默认下载 10 MB + 上传 4 MB），且结果受节点、WiFi、运营商和当前负载影响。
+- 扫描/测速结果仅保存在内存，退出 App 后不保留。
 - App 进入后台后系统可能挂起探测，长时间扫描请保持前台。
 - 这是网络诊断工具，不替代交换机侧抓包、端口镜像或厂商网管系统。
 
@@ -230,4 +242,4 @@ docs/
 
 ## 下一步
 
-只剩 **内外网测速**：下载/上传吞吐、延迟与抖动，支持自建或授权测速端点，区分内网和公网目标。
+8 个模块已全部完成。后续可以继续做：结果导出/分享、历史记录、IPv6、更多测速节点自动选择，以及探针联动（环路/风暴/周边 AP 的真实抓包能力）。
