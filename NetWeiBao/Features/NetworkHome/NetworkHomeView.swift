@@ -21,7 +21,7 @@ struct NetworkHomeView: View {
                     allInterfacesCard
                     permissionsCard
                     InlineInfoNote(
-                        text: "“诊断网卡”会用于 Ping、DHCP、路由追踪、环路/风暴等 IPv4 探测；测速使用 URLSession，仍走系统路由。iPhone 不能由 App 直接切换 Wi-Fi/蜂窝，实际联网切换请到系统设置。"
+                        text: "“诊断网卡”会用于 Ping、DHCP、路由追踪、环路/风暴，以及内外网测速。iPhone 不能由 App 直接切换 Wi-Fi/蜂窝，实际联网切换请到系统设置。"
                     )
                     .padding(.horizontal, 2)
                 }

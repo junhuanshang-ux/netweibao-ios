@@ -232,7 +232,7 @@ struct SpeedTestDashboardView: View {
                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                     .foregroundStyle(AppTheme.textTertiary)
 
-                Text("测速使用系统路由；首页“切换网卡”只影响 Ping / DHCP / 路由追踪 / 环路 / 风暴，不改变测速出口。")
+                Text("测速会绑定首页所选“诊断网卡”；未选择时走系统默认路由。绑定失败会直接报错，不会偷偷回退。")
                     .font(.system(size: 10, weight: .regular, design: .rounded))
                     .foregroundStyle(AppTheme.amber)
                     .fixedSize(horizontal: false, vertical: true)

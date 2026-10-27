@@ -157,9 +157,10 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 - 外网默认节点：**洛杉矶 Sharktech LibreSpeed**（`https://laxspeed.sharktech.net/backend`），已验证 100 MB 下载和 50 MB 上传。
 - **支持中国内节点**：把外网后端地址改成国内 LibreSpeed 的 `.../backend` 即可；国内公共测速站多有限网/反爬，所以没有内置固定地址。
+- `www.speedtest.cn` 不是 LibreSpeed 后端，不能直接填入；它需要官方 SDK/授权 API。当前支持的是 LibreSpeed 兼容后端。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
 - 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载（10–500 MB）和上传（5–200 MB）可在测速页手动调节。
-- **测速出口固定为系统路由**；首页“切换网卡”不会改变测速结果，只影响 Ping / DHCP / 路由追踪 / 环路 / 风暴。
+- **测速也绑定“诊断网卡”**：使用 `NWConnection.requiredInterface` 强制指定接口；未选择时走系统默认路由，绑定失败直接报错，不回退。
 - 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
 - 公共节点可能限速，结果不能直接等同运营商带宽。
 
@@ -270,7 +271,7 @@ docs/
 - iOS 会在首次访问局域网时弹“本地网络”权限；拒绝后探测会失败。
 - 当前探测只支持 IPv4；首页会展示 IPv6 地址，但 Ping / DHCP / 路由追踪仍为 IPv4。
 - 路由追踪依赖 iOS 是否向非特权 ICMP socket 暴露 `Time Exceeded`；不暴露时只能显示 `*`，不能伪造跳点。
-- “切换网卡”只影响使用 BSD socket 的诊断模块；URLSession 测速、系统 DNS 和实际联网路由仍由 iOS 决定。iPhone 上不能由 App 直接切换 Wi-Fi/蜂窝。
+- “切换网卡”会绑定 BSD socket 诊断模块和 `NWConnection` 测速；系统 DNS 和实际联网路由仍由 iOS 决定。iPhone 上不能由 App 直接切换 Wi-Fi/蜂窝。
 - DNS 通过 `/etc/resolv.conf` 尽力读取；iOS 沙盒可能隐藏，界面会标注“系统未公开”。
 - WiFi 只读取当前连接，不能扫描周边 AP；需要“精确”定位权限和 Access WiFi Information entitlement。
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。

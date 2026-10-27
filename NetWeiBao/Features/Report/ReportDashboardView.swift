@@ -120,7 +120,7 @@ struct ReportDashboardView: View {
                     PrimaryButtonStyle(color: viewModel.isRunning ? AppTheme.danger : tint)
                 )
 
-                Text("检测会使用当前“诊断网卡”；测速仍走系统路由。")
+                Text("检测会使用当前“诊断网卡”，测速也会强制绑定该接口。")
                     .font(.system(size: 9, weight: .regular, design: .rounded))
                     .foregroundStyle(AppTheme.textTertiary)
             }
