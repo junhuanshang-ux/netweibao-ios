@@ -11,7 +11,6 @@ enum ReportRunner {
     static func run(
         onProgress: @escaping @MainActor (ReportProgress) -> Void
     ) async throws -> ReportSnapshot {
-        let startedAt = Date()
         let info = NetworkInterface.activeIPv4()
         let gateway = await GatewayDetector.detect(interface: info)
         let target = gateway
@@ -338,11 +337,9 @@ enum ReportRunner {
         // MARK: Speed
         try Task.checkCancellation()
         emit(.speed, "快速测速 \(reportSpeedDownloadMB) MB / \(reportSpeedUploadMB) MB")
-        let speedStartedAt = Date()
         let speedResult = await quickSpeedResult()
         append(.speed, speedResult)
 
-        _ = startedAt
         return ReportSnapshot(
             generatedAt: Date(),
             hostName: ProcessInfo.processInfo.hostName,
@@ -432,9 +429,8 @@ enum ReportRunner {
     }
 
     private static func currentWiFi() async -> WiFiNetworkInfo? {
-        guard CLLocationManager.authorizationStatus() != .denied,
-              CLLocationManager.authorizationStatus() != .restricted
-        else {
+        let status = CLLocationManager().authorizationStatus
+        guard status != .denied, status != .restricted else {
             return nil
         }
 
