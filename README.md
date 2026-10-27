@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`5e8c58e1e2ad782807e218ea764d2e6095df46c14eabc238f423d815e44b11e3`
+- SHA-256：`06c018e68f21f7eea34ea27040f2b43128095352e3a8c02bbcf5fe40bb7f79e1`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -83,7 +83,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - 列出全部接口：Wi-Fi、蜂窝、VPN、热点桥接、点对点、回环、其他。
 - 每个接口显示 IPv4 / IPv6、前缀、点分掩码、UP/RUNNING 状态。
 - 显示推测网关与 DNS（DNS 读取失败时明确标注“系统未公开”）。
-- **切换网卡**：选择诊断出口接口；Ping、DHCP、路由追踪、环路/风暴会通过 `IP_BOUND_IF` 绑定该接口。测速走 URLSession，仍由系统路由决定。
+- **切换网卡**：选择诊断出口接口；Ping、DHCP、路由追踪、环路/风暴通过 `IP_BOUND_IF` 绑定，测速通过 `NWConnection` 绑定同一接口类型。
 - iPhone 不允许 App 直接切换 Wi-Fi/蜂窝，真正的联网切换需到系统设置；首页提供“系统设置”入口。
 
 ### 首次启动权限
@@ -160,7 +160,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - `www.speedtest.cn` 不是 LibreSpeed 后端，不能直接填入；它需要官方 SDK/授权 API。当前支持的是 LibreSpeed 兼容后端。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
 - 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载（10–500 MB）和上传（5–200 MB）可在测速页手动调节。
-- **测速也绑定“诊断网卡”**：使用 `NWConnection.requiredInterface` 强制指定接口；未选择时走系统默认路由，绑定失败直接报错，不回退。
+- **测速也绑定“诊断网卡”**：使用 `NWConnection` 的 `requiredInterfaceType` 强制指定 Wi-Fi / 蜂窝 / 有线接口类型；未选择时走系统默认路由，绑定失败直接报错，不回退。
 - 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
 - 公共节点可能限速，结果不能直接等同运营商带宽。
 
