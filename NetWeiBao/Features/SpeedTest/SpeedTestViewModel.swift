@@ -145,9 +145,18 @@ final class SpeedTestViewModel: ObservableObject {
             do {
                 let node: SpeedTestNode
                 if usesSpeedTestCN {
-                    node = try await SpeedTestCNService.shared.resolveNode()
+                    do {
+                        node = try await SpeedTestCNService.shared.resolveNode()
+                        self.resolvedNodeName = node.name
+                    } catch {
+                        node = SpeedTestNode(
+                            name: "测速网解析失败 · 已回退 LibreSpeed",
+                            baseURL: URL(string: Self.defaultExternalURL)!,
+                            referer: nil
+                        )
+                        self.resolvedNodeName = "测速网解析失败 · 已回退 LibreSpeed"
+                    }
                     guard !Task.isCancelled, self.runID == currentRun else { return }
-                    self.resolvedNodeName = node.name
                     self.phase = .latency
                 } else {
                     guard let url else {

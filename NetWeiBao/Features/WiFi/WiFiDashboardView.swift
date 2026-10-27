@@ -266,14 +266,20 @@ struct WiFiDashboardView: View {
 
                         Spacer()
 
-                        Text("\(Int(network.signalStrength * 100))% · \(signalLabel(network.signalStrength))")
+                        Text(network.signalText)
                             .font(.system(size: 11, weight: .semibold, design: .monospaced))
                             .foregroundStyle(signalColor(network.signalStrength))
                             .monospacedDigit()
                     }
 
-                    ProgressView(value: network.signalStrength)
-                        .tint(signalColor(network.signalStrength))
+                    if network.hasSignalStrength {
+                        ProgressView(value: network.signalStrength)
+                            .tint(signalColor(network.signalStrength))
+                    } else {
+                        Text("iOS 未返回 RSSI，请以网关延迟/丢包/抖动为准")
+                            .font(.system(size: 9, weight: .regular, design: .rounded))
+                            .foregroundStyle(AppTheme.textTertiary)
+                    }
                 }
             }
         }
@@ -331,13 +337,8 @@ struct WiFiDashboardView: View {
         return String(format: "%.1f", value)
     }
 
-    private func signalLabel(_ strength: Double) -> String {
-        if strength >= 0.66 { return "强" }
-        if strength >= 0.33 { return "中" }
-        return "弱"
-    }
-
     private func signalColor(_ strength: Double) -> Color {
+        guard strength > 0.01 else { return AppTheme.textTertiary }
         if strength >= 0.66 { return AppTheme.accent }
         if strength >= 0.33 { return AppTheme.amber }
         return AppTheme.danger

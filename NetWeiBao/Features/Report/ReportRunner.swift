@@ -278,7 +278,12 @@ enum ReportRunner {
         if let wifi {
             wifiMetrics.append(ReportMetric(label: "SSID", value: wifi.ssid))
             wifiMetrics.append(ReportMetric(label: "BSSID", value: wifi.bssid))
-            wifiMetrics.append(ReportMetric(label: "信号", value: percent(wifi.signalStrength)))
+            wifiMetrics.append(
+                ReportMetric(
+                    label: "信号",
+                    value: wifi.hasSignalStrength ? wifi.signalText : "系统未提供"
+                )
+            )
         }
         if let baselineForWiFi {
             wifiMetrics.append(

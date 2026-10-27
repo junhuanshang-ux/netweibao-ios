@@ -23,24 +23,29 @@ final class SpeedTestCNService: @unchecked Sendable {
     }
 
     func resolveNode() async throws -> SpeedTestNode {
-        let envelope = try await fetchNodeEnvelope()
-        guard let cipher = Data(base64Encoded: envelope.data) else {
-            throw SpeedTestError.message("测速网节点数据格式无效。")
+        let encoded = try await fetchNodeData()
+        guard let cipher = Data(base64Encoded: encoded) else {
+            throw SpeedTestError.message("测速网节点数据不是有效的 Base64。")
         }
 
         let plain = try decrypt(cipher)
-        let payload = try JSONDecoder().decode(Payload.self, from: plain)
-        let candidates = payload.data.compactMap(makeNode).sorted {
-            $0.distance < $1.distance
+        guard let root = try? JSONSerialization.jsonObject(with: plain),
+              let object = root as? [String: Any],
+              let rows = object["data"] as? [[String: Any]]
+        else {
+            throw SpeedTestError.message("测速网节点 JSON 结构无效（解密后无法读取 data 数组）。")
         }
 
+        let candidates = rows.compactMap(makeNode).sorted {
+            $0.distance < $1.distance
+        }
         guard let first = candidates.first else {
             throw SpeedTestError.message("测速网没有返回可用的国内测速节点。")
         }
         return first.node
     }
 
-    private func fetchNodeEnvelope() async throws -> Envelope {
+    private func fetchNodeData() async throws -> String {
         guard var components = URLComponents(
             string: "https://nodes-api.speedtest.cn/"
         ) else {
@@ -73,14 +78,21 @@ final class SpeedTestCNService: @unchecked Sendable {
             )
         }
 
-        return try JSONDecoder().decode(Envelope.self, from: data)
+        guard let root = try? JSONSerialization.jsonObject(with: data),
+              let object = root as? [String: Any],
+              let encoded = object["data"] as? String
+        else {
+            let preview = String(data: data.prefix(160), encoding: .utf8) ?? "—"
+            throw SpeedTestError.message("测速网节点接口返回格式异常：\(preview)")
+        }
+        return encoded
     }
 
-    private func makeNode(_ node: Node) -> (distance: Int, node: SpeedTestNode)? {
-        guard node.isCDN?.value != 1,
-              let downloadString = node.downloadUrl,
-              let uploadString = node.uploadUrl,
-              let pingString = node.pingUrl,
+    private func makeNode(_ row: [String: Any]) -> (distance: Int, node: SpeedTestNode)? {
+        guard intValue(row["is_cdn"]) != 1,
+              let downloadString = stringValue(row["downloadUrl"]),
+              let uploadString = stringValue(row["uploadUrl"]),
+              let pingString = stringValue(row["pingUrl"]),
               let downloadURL = URL(string: downloadString),
               let uploadURL = URL(string: uploadString),
               let pingURL = URL(string: pingString)
@@ -97,16 +109,16 @@ final class SpeedTestCNService: @unchecked Sendable {
         components?.fragment = nil
         guard let baseURL = components?.url else { return nil }
 
-        let location = [node.province, node.city]
-            .compactMap { $0 }
+        let province = stringValue(row["province"]) ?? ""
+        let city = stringValue(row["city"]) ?? ""
+        let operatorName = stringValue(row["operator"]) ?? "测速网"
+        let location = [province, city]
             .filter { !$0.isEmpty }
             .joined(separator: " · ")
-        let operatorName = node.operatorName ?? "测速网"
         let name = location.isEmpty
             ? "测速网 · \(operatorName)"
             : "测速网 · \(location) · \(operatorName)"
 
-        let distance = node.distance?.value ?? Int.max
         let speedNode = SpeedTestNode(
             name: name,
             baseURL: baseURL,
@@ -118,7 +130,27 @@ final class SpeedTestCNService: @unchecked Sendable {
             maxUploadMegabytesPerRequest: 10,
             referer: "https://www.speedtest.cn/"
         )
-        return (distance, speedNode)
+        return (intValue(row["distance"]) ?? Int.max, speedNode)
+    }
+
+    private func stringValue(_ value: Any?) -> String? {
+        if let string = value as? String, !string.isEmpty {
+            return string
+        }
+        if let number = value as? NSNumber {
+            return number.stringValue
+        }
+        return nil
+    }
+
+    private func intValue(_ value: Any?) -> Int? {
+        if let number = value as? NSNumber {
+            return number.intValue
+        }
+        if let string = value as? String {
+            return Int(string)
+        }
+        return nil
     }
 
     private func path(for url: URL, fallback: String) -> String {
@@ -161,54 +193,5 @@ final class SpeedTestCNService: @unchecked Sendable {
 
         output.removeSubrange(moved..<output.count)
         return output
-    }
-
-    private struct Envelope: Decodable {
-        let data: String
-    }
-
-    private struct Payload: Decodable {
-        let data: [Node]
-    }
-
-    private struct FlexibleInt: Decodable {
-        let value: Int?
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            if let intValue = try? container.decode(Int.self) {
-                value = intValue
-            } else if let stringValue = try? container.decode(String.self) {
-                value = Int(stringValue)
-            } else {
-                value = nil
-            }
-        }
-    }
-
-    private struct Node: Decodable {
-        let id: String?
-        let host: String?
-        let province: String?
-        let city: String?
-        let operatorName: String?
-        let distance: FlexibleInt?
-        let isCDN: FlexibleInt?
-        let downloadUrl: String?
-        let uploadUrl: String?
-        let pingUrl: String?
-
-        enum CodingKeys: String, CodingKey {
-            case id
-            case host
-            case province
-            case city
-            case operatorName = "operator"
-            case distance
-            case isCDN = "is_cdn"
-            case downloadUrl
-            case uploadUrl
-            case pingUrl
-        }
     }
 }

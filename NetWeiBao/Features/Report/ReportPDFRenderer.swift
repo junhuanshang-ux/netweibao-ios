@@ -111,7 +111,7 @@ private final class Canvas {
         metricRow("推测网关", snapshot.gateway ?? "—")
         metricRow("诊断网卡", snapshot.diagnosticInterface ?? "系统默认")
         if let wifi = snapshot.wifi {
-            metricRow("WiFi", "\(wifi.ssid) · \(percent(wifi.signalStrength))")
+            metricRow("WiFi", "\(wifi.ssid) · \(wifi.signalText)")
         }
     }
 
