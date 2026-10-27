@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`aaa78a574c7f53bc2d71f070da866ee25fee10178aaecebd74a024b128f3f7d9`
+- SHA-256：`b03ad95c428ba1ed1f283fd752f1987911482dc839e62c281414a0808e5eb15a`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -42,7 +42,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 - `xcodebuild -quiet`，关闭 dSYM 和 index store；
 - 只保留一个 workflow，`concurrency` 自动取消旧构建。
 
-本次从触发到 IPA 发布约 **55 秒**。GitHub 托管 runner 的排队仍可能受平台负载影响，但不会再像之前那样长时间卡在 queued。
+本次构建 job 约 **61 秒**；包含 GitHub 排队后约 **2 分钟**。之前那种十分钟级等待基本消除，但托管 runner 的排队仍可能受平台负载影响。
 
 ---
 
@@ -58,6 +58,25 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 | 6 | WiFi 分析 | ✅ 已完成（仅当前连接） |
 | 7 | 子网计算 | ✅ 已完成 |
 | 8 | 内外网测速 | ✅ 已完成 |
+
+### 网络首页已实现
+
+- 底部新增 **首页** Tab，作为 App 默认页。
+- 动态显示网络路径状态（Wi-Fi / 蜂窝 / 有线 / 离线、计费网络、低数据模式）、主机名、系统版本。
+- 列出全部接口：Wi-Fi、蜂窝、VPN、热点桥接、点对点、回环、其他。
+- 每个接口显示 IPv4 / IPv6、前缀、点分掩码、UP/RUNNING 状态。
+- 显示推测网关与 DNS（DNS 读取失败时明确标注“系统未公开”）。
+- **切换网卡**：选择诊断出口接口；Ping、DHCP、路由追踪、环路/风暴会通过 `IP_BOUND_IF` 绑定该接口。测速走 URLSession，仍由系统路由决定。
+- iPhone 不允许 App 直接切换 Wi-Fi/蜂窝，真正的联网切换需到系统设置；首页提供“系统设置”入口。
+
+### 首次启动权限
+
+首次打开会自动请求：
+
+1. **定位（建议精确）**：WiFi 分析读取 SSID/BSSID、信号强度需要。
+2. **本地网络**：通过短时 Bonjour 浏览触发 iOS 本地网络授权，用于 Ping、DHCP、路由追踪和局域网扫描。
+
+不请求通知、相机、麦克风、照片或通讯录。权限状态和“去设置 / 精确位置 / 重新检测”入口都放在首页。
 
 ### Ping 已实现
 
@@ -226,8 +245,10 @@ docs/
 
 - 目标可能主动丢弃 ICMP，**超时不等于设备离线**。
 - iOS 会在首次访问局域网时弹“本地网络”权限；拒绝后探测会失败。
-- 当前只支持 IPv4；IPv6 尚未接入。
+- 当前探测只支持 IPv4；首页会展示 IPv6 地址，但 Ping / DHCP / 路由追踪仍为 IPv4。
 - 路由追踪依赖 iOS 是否向非特权 ICMP socket 暴露 `Time Exceeded`；不暴露时只能显示 `*`，不能伪造跳点。
+- “切换网卡”只影响使用 BSD socket 的诊断模块；URLSession 测速、系统 DNS 和实际联网路由仍由 iOS 决定。iPhone 上不能由 App 直接切换 Wi-Fi/蜂窝。
+- DNS 通过 `/etc/resolv.conf` 尽力读取；iOS 沙盒可能隐藏，界面会标注“系统未公开”。
 - WiFi 只读取当前连接，不能扫描周边 AP；需要“精确”定位权限和 Access WiFi Information entitlement。
 - Sideloadly / AltStore 重签时，所用 provisioning profile 也需要支持 `com.apple.developer.networking.wifi-info`；否则 WiFi 详情可能为空或签名失败。
 - 外网测速默认使用第三方 LibreSpeed 公共节点，可能被限速或临时不可用；内网测速必须在局域网自建 LibreSpeed 后端。
