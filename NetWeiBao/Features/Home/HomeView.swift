@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var localInfo = NetworkInterface.activeIPv4()
-
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -15,9 +13,6 @@ struct HomeView: View {
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        header
-                        localNetworkCard
-
                         HStack(alignment: .firstTextBaseline) {
                             SectionLabel(title: "工具")
                             Spacer()
@@ -45,87 +40,6 @@ struct HomeView: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
-        }
-        .onAppear {
-            localInfo = NetworkInterface.activeIPv4()
-        }
-    }
-
-    private var header: some View {
-        HStack(spacing: 13) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [AppTheme.accent, AppTheme.blue],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                Image(systemName: "network")
-                    .font(.system(size: 23, weight: .semibold))
-                    .foregroundStyle(Color(hex: 0x04120E))
-            }
-            .frame(width: 52, height: 52)
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text("网维宝")
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundStyle(AppTheme.textPrimary)
-
-                Text("NETWORK FIELD KIT")
-                    .font(.system(size: 8, weight: .semibold, design: .rounded))
-                    .tracking(2.2)
-                    .foregroundStyle(AppTheme.textTertiary)
-            }
-
-            Spacer()
-
-            StatusBadge(text: "v0.1", color: AppTheme.blue)
-        }
-        .padding(.vertical, 2)
-    }
-
-    private var localNetworkCard: some View {
-        AppCard {
-            HStack(spacing: 13) {
-                ZStack {
-                    Circle()
-                        .fill(AppTheme.blue.opacity(0.13))
-                    Image(systemName: localInfo == nil ? "wifi.slash" : "wifi")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(localInfo == nil ? AppTheme.amber : AppTheme.blue)
-                }
-                .frame(width: 42, height: 42)
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("本机地址")
-                        .font(.system(size: 10, weight: .medium, design: .rounded))
-                        .foregroundStyle(AppTheme.textTertiary)
-
-                    Text(localInfo?.address.description ?? "未连接 IPv4")
-                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
-                        .foregroundStyle(AppTheme.textPrimary)
-
-                    Text(localInfo.map { "接口 \($0.name)" } ?? "请检查 Wi-Fi 或局域网")
-                        .font(.system(size: 9, weight: .regular, design: .rounded))
-                        .foregroundStyle(AppTheme.textTertiary)
-                }
-
-                Spacer(minLength: 6)
-
-                VStack(alignment: .trailing, spacing: 3) {
-                    Text("当前网段")
-                        .font(.system(size: 10, weight: .medium, design: .rounded))
-                        .foregroundStyle(AppTheme.textTertiary)
-
-                    Text(localInfo?.subnet.description ?? "—")
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                }
-            }
         }
     }
 

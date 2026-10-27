@@ -132,6 +132,11 @@ struct SpeedTestDashboardView: View {
                         .keyboardType(.URL)
                         .disabled(viewModel.isRunning)
                         .terminalField()
+
+                    Text("支持国内 LibreSpeed 节点：把地址替换成国内后端的 .../backend 即可。国内公共测速站多有反爬或限网，因此没有内置默认值。")
+                        .font(.system(size: 10, weight: .regular, design: .rounded))
+                        .foregroundStyle(AppTheme.textTertiary)
+                        .fixedSize(horizontal: false, vertical: true)
                 } else {
                     TextField(
                         "http://192.168.1.10:8080/backend",
