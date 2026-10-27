@@ -69,10 +69,13 @@ final class WiFiViewModel: NSObject, ObservableObject, CLLocationManagerDelegate
         UIApplication.shared.open(url)
     }
 
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
-        if isAuthorized {
-            fetchCurrentNetwork()
+    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            self.authorizationStatus = self.locationManager.authorizationStatus
+            if self.isAuthorized {
+                self.fetchCurrentNetwork()
+            }
         }
     }
 
@@ -97,7 +100,7 @@ final class WiFiViewModel: NSObject, ObservableObject, CLLocationManagerDelegate
                     bssid: network.bssid,
                     isSecure: network.isSecure,
                     signalStrength: min(max(network.signalStrength, 0), 1),
-                    autoJoined: network.autoJoined
+                    autoJoined: network.didAutoJoin
                 )
 
                 await self.loadQuality()
