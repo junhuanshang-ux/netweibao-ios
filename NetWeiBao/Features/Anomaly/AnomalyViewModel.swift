@@ -10,6 +10,7 @@ final class AnomalyViewModel: ObservableObject {
     @Published private(set) var isRunning = false
     @Published private(set) var report: AnomalyReport?
     @Published private(set) var localInfo: NetworkInterface.Info?
+    @Published private(set) var gateway: IPv4Address?
     @Published var errorMessage: String?
 
     private var task: Task<Void, Never>?
@@ -18,16 +19,23 @@ final class AnomalyViewModel: ObservableObject {
     init(mode: AnomalyMode) {
         self.mode = mode
         let info = NetworkInterface.activeIPv4()
+        let gateway = Self.lanGateway(for: info)
         self.localInfo = info
-        self.target = info?.subnet.firstHost.description ?? ""
+        self.gateway = gateway
+        self.target = gateway?.description
+            ?? info?.subnet.firstHost.description
+            ?? ""
     }
 
     var suggestedTarget: String {
-        localInfo?.subnet.firstHost.description ?? ""
+        gateway?.description
+            ?? localInfo?.subnet.firstHost.description
+            ?? ""
     }
 
     func refreshInterface() {
         localInfo = NetworkInterface.activeIPv4()
+        gateway = Self.lanGateway(for: localInfo)
         if target.isEmpty {
             target = suggestedTarget
         }
@@ -97,11 +105,20 @@ final class AnomalyViewModel: ObservableObject {
             )
             guard !Task.isCancelled, self.runID == currentRun else { return }
 
+            self.phase = .unicast
+            let unicast = await EchoBurstProbe.unicast(
+                target: address,
+                count: 10,
+                interval: 0.08,
+                listenWindow: 1.5
+            )
+            guard !Task.isCancelled, self.runID == currentRun else { return }
+
             self.phase = .broadcast
-            let broadcast = await BroadcastProbe.burst(
+            let broadcast = await EchoBurstProbe.broadcast(
                 count: 8,
                 interval: 0.10,
-                listenWindow: 2.0
+                listenWindow: 1.5
             )
             guard !Task.isCancelled, self.runID == currentRun else { return }
 
@@ -120,6 +137,7 @@ final class AnomalyViewModel: ObservableObject {
                 target: address.description,
                 interfaceName: self.localInfo?.name,
                 baseline: baseline,
+                unicast: unicast,
                 broadcast: broadcast,
                 post: post
             )
@@ -145,5 +163,14 @@ final class AnomalyViewModel: ObservableObject {
         isRunning = false
         phase = .idle
         task = nil
+    }
+
+    private static func lanGateway(for info: NetworkInterface.Info?) -> IPv4Address? {
+        guard let info,
+              info.name.hasPrefix("en") || info.name.hasPrefix("bridge")
+        else {
+            return nil
+        }
+        return NetworkInterface.defaultGateway()
     }
 }

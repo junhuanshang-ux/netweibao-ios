@@ -11,6 +11,7 @@ enum AnomalyPhase: Sendable {
     case idle
     case resolving
     case baseline
+    case unicast
     case broadcast
     case post
     case analyzing
@@ -56,7 +57,8 @@ struct LinkQuality: Sendable {
     }
 }
 
-struct BroadcastBurstResult: Sendable {
+struct EchoBurstResult: Sendable {
+    let isBroadcast: Bool
     let sent: Int
     let totalReplies: Int
     let uniquePairs: Int
@@ -75,9 +77,11 @@ struct AnomalyReport: Sendable {
     let headline: String
     let summary: String
     let evidence: [String]
+    let suggestions: [String]
     let baseline: LinkQuality
     let post: LinkQuality
-    let broadcast: BroadcastBurstResult
+    let unicast: EchoBurstResult
+    let broadcast: EchoBurstResult
     let target: String
     let interfaceName: String?
     let createdAt: Date

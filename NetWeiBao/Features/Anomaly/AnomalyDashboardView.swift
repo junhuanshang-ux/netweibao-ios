@@ -51,6 +51,14 @@ struct AnomalyDashboardView: View {
         }
     }
 
+    private var networkSummary: String {
+        guard let info = viewModel.localInfo else {
+            return "请先连接 Wi-Fi 或局域网"
+        }
+        let gateway = viewModel.gateway?.description ?? "未识别"
+        return "本机 \(info.address.description) · 网关 \(gateway) · \(info.subnet.description)"
+    }
+
     private var header: some View {
         HStack(spacing: 14) {
             ZStack {
@@ -113,15 +121,11 @@ struct AnomalyDashboardView: View {
                 }
                 .terminalField()
 
-                Text(
-                    viewModel.localInfo.map {
-                        "本机 \($0.address.description) · \($0.subnet.description) · 默认取网段第一个地址"
-                    } ?? "请先连接 Wi-Fi 或局域网"
-                )
-                .font(.system(size: 10, weight: .regular, design: .monospaced))
-                .foregroundStyle(AppTheme.textTertiary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
+                Text(networkSummary)
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundStyle(AppTheme.textTertiary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
         }
     }
@@ -134,7 +138,7 @@ struct AnomalyDashboardView: View {
 
                     Spacer()
 
-                    StatusBadge(text: "最长约 18 秒", color: AppTheme.blue)
+                    StatusBadge(text: "最长约 20 秒", color: AppTheme.blue)
                 }
 
                 Text(viewModel.mode.explanation)
@@ -225,8 +229,9 @@ struct AnomalyDashboardView: View {
         VStack(spacing: 14) {
             riskCard(report)
             evidenceCard(report)
+            suggestionsCard(report)
             metricsCard(report)
-            broadcastCard(report)
+            echoCard(report)
             contextCard(report)
         }
     }
@@ -268,6 +273,30 @@ struct AnomalyDashboardView: View {
                             .fill(viewModel.mode.tint)
                             .frame(width: 4, height: 4)
                             .padding(.top, 5)
+
+                        Text(item.element)
+                            .font(.system(size: 11, weight: .regular, design: .rounded))
+                            .foregroundStyle(AppTheme.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        Spacer(minLength: 0)
+                    }
+                }
+            }
+        }
+    }
+
+    private func suggestionsCard(_ report: AnomalyReport) -> some View {
+        AppCard {
+            VStack(alignment: .leading, spacing: 10) {
+                SectionLabel(title: "下一步建议")
+
+                ForEach(Array(report.suggestions.enumerated()), id: \.offset) { item in
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "arrow.turn.down.right")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(viewModel.mode.tint)
+                            .padding(.top, 1)
 
                         Text(item.element)
                             .font(.system(size: 11, weight: .regular, design: .rounded))
@@ -333,56 +362,67 @@ struct AnomalyDashboardView: View {
         }
     }
 
-    private func broadcastCard(_ report: AnomalyReport) -> some View {
+    private func echoCard(_ report: AnomalyReport) -> some View {
         AppCard {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    SectionLabel(title: "广播探测")
+            VStack(alignment: .leading, spacing: 13) {
+                SectionLabel(title: "回声探测")
+                echoSummary(title: "单播 · 目标", result: report.unicast)
+                Divider().background(AppTheme.stroke)
+                echoSummary(title: "广播 · 255.255.255.255", result: report.broadcast)
+            }
+        }
+    }
 
-                    Spacer()
+    private func echoSummary(title: String, result: EchoBurstResult) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(title)
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(AppTheme.textPrimary)
 
-                    Text("发送 \(report.broadcast.sent) 个请求")
-                        .font(.system(size: 10, weight: .regular, design: .monospaced))
-                        .foregroundStyle(AppTheme.textTertiary)
-                }
+                Spacer()
 
-                LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: 8),
-                        GridItem(.flexible(), spacing: 8),
-                        GridItem(.flexible(), spacing: 8)
-                    ],
-                    spacing: 8
-                ) {
-                    StatTile(
-                        title: "回复",
-                        value: "\(report.broadcast.totalReplies)"
-                    )
-                    StatTile(
-                        title: "响应设备",
-                        value: "\(report.broadcast.uniqueResponders.count)"
-                    )
-                    StatTile(
-                        title: "重复回复",
-                        value: "\(report.broadcast.duplicateReplies)",
-                        tint: report.broadcast.duplicateReplies > 0 ? AppTheme.amber : AppTheme.accent
-                    )
-                }
+                Text("发送 \(result.sent)")
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundStyle(AppTheme.textTertiary)
+            }
 
-                Text(
-                    "同源同序号重复 \(report.broadcast.duplicatePairs) 组 · 最多 \(report.broadcast.maxRepliesPerPair) 个/组"
+            LazyVGrid(
+                columns: [
+                    GridItem(.flexible(), spacing: 8),
+                    GridItem(.flexible(), spacing: 8),
+                    GridItem(.flexible(), spacing: 8)
+                ],
+                spacing: 8
+            ) {
+                StatTile(
+                    title: "回复",
+                    value: "\(result.totalReplies)"
                 )
-                .font(.system(size: 10, weight: .regular, design: .monospaced))
-                .foregroundStyle(AppTheme.textTertiary)
+                StatTile(
+                    title: "响应设备",
+                    value: "\(result.uniqueResponders.count)"
+                )
+                StatTile(
+                    title: "重复回复",
+                    value: "\(result.duplicateReplies)",
+                    tint: result.duplicateReplies > 0 ? AppTheme.amber : AppTheme.accent
+                )
+            }
 
-                if !report.broadcast.warnings.isEmpty {
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(Array(report.broadcast.warnings.prefix(3).enumerated()), id: \.offset) { item in
-                            Text(item.element)
-                                .font(.system(size: 10, weight: .regular, design: .rounded))
-                                .foregroundStyle(AppTheme.amber)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
+            Text(
+                "同源同序号重复 \(result.duplicatePairs) 组 · 最多 \(result.maxRepliesPerPair) 个/组"
+            )
+            .font(.system(size: 10, weight: .regular, design: .monospaced))
+            .foregroundStyle(AppTheme.textTertiary)
+
+            if !result.warnings.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(result.warnings.prefix(2).enumerated()), id: \.offset) { item in
+                        Text(item.element)
+                            .font(.system(size: 10, weight: .regular, design: .rounded))
+                            .foregroundStyle(AppTheme.amber)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
@@ -454,9 +494,9 @@ private extension AnomalyMode {
     var explanation: String {
         switch self {
         case .loop:
-            return "先对网关做基线采样，再发送低强度广播 Echo，观察是否出现同源同序号重复回复，并复测网关质量。"
+            return "先对网关做基线采样，再分别做单播与广播重复回声探测，最后复测网关质量，寻找同源同序号重复回复。"
         case .storm:
-            return "先对网关做基线采样，再发送低强度广播探测，比较探测前后的丢包、延迟与抖动，寻找风暴导致的链路退化。"
+            return "先对网关做基线采样，再进行单播/广播回声探测，比较探测前后的丢包、延迟与抖动，寻找风暴导致的链路退化。"
         }
     }
 
@@ -465,16 +505,16 @@ private extension AnomalyMode {
         case .loop:
             return [
                 "基线：连续 Ping 网关，记录丢包、平均延迟与抖动。",
-                "广播：向 255.255.255.255 发送 8 个低强度 Echo 请求。",
-                "复测：再次采样网关，对比广播前后的链路质量。",
-                "分析：检查同源同序号重复回复，给出启发式结论。"
+                "单播：向网关发送 10 个低强度 Echo，统计同源重复回复。",
+                "广播：向 255.255.255.255 发送 8 个 Echo，补充广播复制证据。",
+                "复测与分析：再次采样网关，结合重复回复与链路质量给出结论。"
             ]
         case .storm:
             return [
                 "基线：连续 Ping 网关，建立延迟、丢包和抖动基线。",
+                "单播：向网关发送 10 个 Echo，统计重复回复与稳定性。",
                 "广播：发送 8 个低强度广播 Echo，观察响应与重复。",
-                "复测：再次采样网关，检测广播负载后的质量变化。",
-                "分析：结合重复回复与退化幅度，给出风暴征兆判断。"
+                "复测与分析：比较探测后的质量变化，给出风暴征兆判断。"
             ]
         }
     }
@@ -521,13 +561,15 @@ private extension AnomalyPhase {
         case .resolving:
             return 0.05
         case .baseline:
-            return 0.15
+            return 0.12
+        case .unicast:
+            return 0.34
         case .broadcast:
-            return 0.45
+            return 0.56
         case .post:
-            return 0.75
+            return 0.80
         case .analyzing:
-            return 0.92
+            return 0.94
         }
     }
 
@@ -538,11 +580,13 @@ private extension AnomalyPhase {
         case .resolving:
             return "正在解析目标…"
         case .baseline:
-            return "1/3 基线采样（最多约 7 秒）"
+            return "1/4 基线采样（最多约 7 秒）"
+        case .unicast:
+            return "2/4 单播重复回声（约 2 秒）"
         case .broadcast:
-            return "2/3 广播回声探测（约 3 秒）"
+            return "3/4 广播回声探测（约 2 秒）"
         case .post:
-            return "3/3 复测链路质量（最多约 7 秒）"
+            return "4/4 复测链路质量（最多约 7 秒）"
         case .analyzing:
             return "正在生成判断…"
         }

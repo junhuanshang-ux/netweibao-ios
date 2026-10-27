@@ -47,21 +47,54 @@ enum LinkSampler {
     }
 }
 
-enum BroadcastProbe {
+enum EchoBurstProbe {
     private static let queue = DispatchQueue(
-        label: "com.netweibao.anomaly.broadcast",
+        label: "com.netweibao.anomaly.echo-burst",
         qos: .userInitiated
     )
 
-    static func burst(
+    static func unicast(
+        target: IPv4Address,
+        count: Int = 10,
+        interval: TimeInterval = 0.08,
+        listenWindow: TimeInterval = 1.5
+    ) async -> EchoBurstResult {
+        await burst(
+            target: target,
+            isBroadcast: false,
+            count: count,
+            interval: interval,
+            listenWindow: listenWindow
+        )
+    }
+
+    static func broadcast(
         count: Int = 8,
         interval: TimeInterval = 0.1,
-        listenWindow: TimeInterval = 2.0
-    ) async -> BroadcastBurstResult {
-        await withCheckedContinuation { (continuation: CheckedContinuation<BroadcastBurstResult, Never>) in
+        listenWindow: TimeInterval = 1.5
+    ) async -> EchoBurstResult {
+        await burst(
+            target: .broadcast,
+            isBroadcast: true,
+            count: count,
+            interval: interval,
+            listenWindow: listenWindow
+        )
+    }
+
+    private static func burst(
+        target: IPv4Address,
+        isBroadcast: Bool,
+        count: Int,
+        interval: TimeInterval,
+        listenWindow: TimeInterval
+    ) async -> EchoBurstResult {
+        await withCheckedContinuation { (continuation: CheckedContinuation<EchoBurstResult, Never>) in
             queue.async {
                 continuation.resume(
                     returning: performBurst(
+                        target: target,
+                        isBroadcast: isBroadcast,
                         count: count,
                         interval: interval,
                         listenWindow: listenWindow
@@ -72,20 +105,23 @@ enum BroadcastProbe {
     }
 
     private static func performBurst(
+        target: IPv4Address,
+        isBroadcast: Bool,
         count: Int,
         interval: TimeInterval,
         listenWindow: TimeInterval
-    ) -> BroadcastBurstResult {
+    ) -> EchoBurstResult {
         let startedAt = Date()
         let total = max(1, count)
         let identifier = UInt16.random(in: 1...UInt16.max)
-        let destination = IPv4Address.broadcast
+        let destination = target
         var warnings: [String] = []
 
         let fileDescriptor = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP)
         guard fileDescriptor >= 0 else {
             return emptyResult(
                 sent: 0,
+                isBroadcast: isBroadcast,
                 target: destination.description,
                 duration: Date().timeIntervalSince(startedAt),
                 warnings: ["无法创建 ICMP 套接字：\(posixMessage(errno))"]
@@ -203,7 +239,8 @@ enum BroadcastProbe {
         let maxRepliesPerPair = replyCounts.values.max() ?? 0
         let uniqueResponders = Set(replyCounts.keys.map(\.source)).sorted()
 
-        return BroadcastBurstResult(
+        return EchoBurstResult(
+            isBroadcast: isBroadcast,
             sent: sentSequences.count,
             totalReplies: totalReplies,
             uniquePairs: uniquePairs,
@@ -250,11 +287,13 @@ enum BroadcastProbe {
 
     private static func emptyResult(
         sent: Int,
+        isBroadcast: Bool,
         target: String,
         duration: TimeInterval,
         warnings: [String]
-    ) -> BroadcastBurstResult {
-        BroadcastBurstResult(
+    ) -> EchoBurstResult {
+        EchoBurstResult(
+            isBroadcast: isBroadcast,
             sent: sent,
             totalReplies: 0,
             uniquePairs: 0,
@@ -285,15 +324,20 @@ enum AnomalyAnalyzer {
         target: String,
         interfaceName: String?,
         baseline: LinkQuality,
-        broadcast: BroadcastBurstResult,
+        unicast: EchoBurstResult,
+        broadcast: EchoBurstResult,
         post: LinkQuality
     ) -> AnomalyReport {
         var evidence: [String] = []
+        var suggestions: [String] = []
         evidence.append(
             "基线：\(baseline.received)/\(baseline.sent) 响应，丢包 \(percent(baseline.loss))，平均 \(latency(baseline.average))，抖动 \(latency(baseline.jitter))"
         )
         evidence.append(
-            "广播：发送 \(broadcast.sent)，收到 \(broadcast.totalReplies) 个回复，来自 \(broadcast.uniqueResponders.count) 台设备，同源重复 \(broadcast.duplicateReplies) 个"
+            "单播回声：发送 \(unicast.sent)，收到 \(unicast.totalReplies) 个回复，同源重复 \(unicast.duplicateReplies) 个"
+        )
+        evidence.append(
+            "广播回声：发送 \(broadcast.sent)，收到 \(broadcast.totalReplies) 个回复，来自 \(broadcast.uniqueResponders.count) 台设备，同源重复 \(broadcast.duplicateReplies) 个"
         )
         evidence.append(
             "复测：\(post.received)/\(post.sent) 响应，丢包 \(percent(post.loss))，平均 \(latency(post.average))，抖动 \(latency(post.jitter))"
@@ -302,6 +346,7 @@ enum AnomalyAnalyzer {
         let baselineUnavailable = baseline.received == 0
         let linkUnstable = baseline.loss >= 0.2 || (baseline.jitter ?? 0) >= 80
         let noBroadcastReplies = broadcast.totalReplies == 0
+        let duplicateReplies = unicast.duplicateReplies + broadcast.duplicateReplies
         let lossWorse = post.loss >= baseline.loss + 0.2
         let latencyWorse: Bool = {
             guard let base = baseline.average, let after = post.average else { return false }
@@ -318,25 +363,29 @@ enum AnomalyAnalyzer {
             risk = .unknown
             headline = "目标无响应"
             summary = "检测目标没有回复 ICMP，无法建立基线，也不能据此判断环路或风暴。请确认网关地址，或换一个允许 Ping 的目标。"
+            suggestions.append("确认默认网关是否就是实际网关；默认值可能只是本网段第一个地址。")
+            suggestions.append("换一个允许 ICMP Ping 的目标，或检查本地网络权限。")
         } else {
             switch mode {
             case .loop:
-                if broadcast.duplicateReplies > 0 {
+                if duplicateReplies > 0 {
                     risk = .suspected
                     headline = "疑似重复回声"
-                    summary = "广播探测中出现同源同序号重复 Echo Reply。它可能是广播复制/环路，也可能来自 Wi-Fi 重传或抓包镜像；这是弱信号，不能确认二层环路。"
+                    summary = "回声探测中出现同源同序号重复 Reply。它可能来自广播复制/环路，也可能来自 Wi-Fi 重传或抓包镜像；这是弱信号，不能确认二层环路。"
                 } else if linkUnstable {
                     risk = .unknown
                     headline = "链路本身不稳定"
                     summary = "基线丢包或抖动过高，无法可靠区分“环路导致的重复”与普通无线/链路波动。"
-                } else if noBroadcastReplies {
+                } else if unicast.totalReplies == 0 {
                     risk = .unknown
-                    headline = "广播探测无响应"
-                    summary = "没有收到广播 Echo Reply，无法判断是否存在重复回声。部分网络会过滤广播 ICMP。"
+                    headline = "单播回声无响应"
+                    summary = "目标在基线阶段有响应，但单播回声探测没有收到回复，可能是瞬时拥塞或目标限速。"
                 } else {
                     risk = .none
                     headline = "未发现明显重复迹象"
-                    summary = "基线稳定，广播探测未出现同源同序号重复回复。该结果不能排除交换机侧的二层环路。"
+                    summary = noBroadcastReplies
+                        ? "基线稳定，单播与广播探测均未出现同源重复回复。广播 ICMP 无响应，广播复制未覆盖；不能排除交换机侧环路。"
+                        : "基线稳定，单播与广播探测均未出现同源重复回复。该结果不能排除交换机侧的二层环路。"
                 }
 
             case .storm:
@@ -344,31 +393,46 @@ enum AnomalyAnalyzer {
                     risk = .suspected
                     headline = "广播负载后链路退化"
                     summary = "低强度广播探测后，网关丢包/延迟/抖动明显上升。这可能是广播风暴、拥塞、无线干扰或设备限速，不能单独确认风暴。"
-                } else if broadcast.duplicateReplies > 0 {
+                } else if duplicateReplies > 0 {
                     risk = .suspected
-                    headline = "疑似广播重复"
-                    summary = "广播探测中出现同源同序号重复回复，可能意味着广播被复制。也可能是 Wi-Fi 重传，需要抓包确认。"
+                    headline = "疑似重复回声"
+                    summary = "单播或广播探测中出现同源同序号重复回复，可能意味着广播被复制。也可能是 Wi-Fi 重传，需要抓包确认。"
                 } else if linkUnstable {
                     risk = .unknown
                     headline = "链路基线不稳定"
                     summary = "基线丢包或抖动过高，无法可靠判断广播负载是否造成了额外退化。"
-                } else if noBroadcastReplies {
-                    risk = .unknown
-                    headline = "广播探测无响应"
-                    summary = "没有收到广播 Echo Reply，无法比较广播负载前后的链路变化。部分网络会过滤广播 ICMP。"
                 } else {
                     risk = .none
                     headline = "未发现明显风暴征兆"
-                    summary = "低强度广播探测未导致网关质量明显下降。iOS 无法抓包，本结果不能替代端口镜像或抓包分析。"
+                    summary = noBroadcastReplies
+                        ? "低强度广播探测未导致网关质量明显下降；广播 ICMP 无响应，广播级证据缺失。iOS 无法抓包，本结果不能替代端口镜像。"
+                        : "低强度广播探测未导致网关质量明显下降。iOS 无法抓包，本结果不能替代端口镜像或抓包分析。"
                 }
             }
         }
 
-        if !broadcast.warnings.isEmpty {
-            evidence.append(contentsOf: broadcast.warnings.prefix(3))
+        if noBroadcastReplies {
+            evidence.append("广播 ICMP 无响应；广播复制检测未覆盖，结论主要依据单播回声与链路质量。")
+            suggestions.append("该网络可能过滤广播 ICMP；不要仅凭“无广播回复”判断环路/风暴。")
         }
-        if broadcast.maxRepliesPerPair > 1 {
-            evidence.append("同源同序号最多收到 \(broadcast.maxRepliesPerPair) 个回复")
+        if duplicateReplies > 0 {
+            suggestions.append("检查交换机 STP / MAC 表、端口指示灯，以及 Wi-Fi 重传或重复 IP。")
+        }
+        if linkRegressed {
+            suggestions.append("检查链路利用率、AP 干扰、广播域大小；可换多个目标在不同时段复测。")
+        }
+        if suggestions.isEmpty {
+            suggestions.append("可换多个目标复测；需要确定性结论时使用端口镜像或探针抓包。")
+        }
+
+        if let warning = unicast.warnings.first {
+            evidence.append("单播探测：\(warning)")
+        }
+        if let warning = broadcast.warnings.first {
+            evidence.append("广播探测：\(warning)")
+        }
+        if max(unicast.maxRepliesPerPair, broadcast.maxRepliesPerPair) > 1 {
+            evidence.append("同源同序号最多收到 \(max(unicast.maxRepliesPerPair, broadcast.maxRepliesPerPair)) 个回复")
         }
 
         return AnomalyReport(
@@ -377,8 +441,10 @@ enum AnomalyAnalyzer {
             headline: headline,
             summary: summary,
             evidence: evidence,
+            suggestions: suggestions,
             baseline: baseline,
             post: post,
+            unicast: unicast,
             broadcast: broadcast,
             target: target,
             interfaceName: interfaceName,
