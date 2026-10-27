@@ -128,6 +128,7 @@ final class SpeedTestCNService: @unchecked Sendable {
 
     private func decrypt(_ cipher: Data) throws -> Data {
         var output = Data(count: cipher.count + kCCBlockSizeAES128)
+        let outputCapacity = output.count
         var moved = 0
 
         let status = output.withUnsafeMutableBytes { outputBytes in
@@ -144,7 +145,7 @@ final class SpeedTestCNService: @unchecked Sendable {
                             cipherBytes.baseAddress,
                             cipher.count,
                             outputBytes.baseAddress,
-                            output.count,
+                            outputCapacity,
                             &moved
                         )
                     }
