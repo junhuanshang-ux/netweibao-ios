@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`b03ad95c428ba1ed1f283fd752f1987911482dc839e62c281414a0808e5eb15a`
+- SHA-256：`843c965473f33cd76969fb1c98ecad5f80cd581aa73319374b5732d4c8f6da39`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -58,6 +58,11 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 | 6 | WiFi 分析 | ✅ 已完成（仅当前连接） |
 | 7 | 子网计算 | ✅ 已完成 |
 | 8 | 内外网测速 | ✅ 已完成 |
+
+### 工作台
+
+- 顶部品牌/本机网络卡已移除，只保留“工具”网格，减少重复信息。
+- 完整网络信息统一放在“首页”。
 
 ### 网络首页已实现
 
@@ -139,6 +144,7 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 ### 内外网测速已实现
 
 - 外网默认节点：**东京 A573 LibreSpeed**（`https://librespeed.a573.net/backend`）。
+- **支持中国内节点**：把外网后端地址改成国内 LibreSpeed 的 `.../backend` 即可；国内公共测速站多有限网/反爬，所以没有内置固定地址。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
 - 测试流程：5 次延迟采样 → 10 MB 下载 → 4 MB 上传。
 - 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
