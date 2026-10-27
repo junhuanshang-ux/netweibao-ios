@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class SpeedTestViewModel: ObservableObject {
-    static let defaultExternalURL = "https://librespeed.a573.net/backend"
+    static let defaultExternalURL = "https://laxspeed.sharktech.net/backend"
 
     @Published var mode: SpeedTestMode = .external
     @Published var externalURL = SpeedTestViewModel.defaultExternalURL
@@ -31,7 +31,7 @@ final class SpeedTestViewModel: ObservableObject {
         if mode == .external {
             return externalURL.trimmingCharacters(in: .whitespacesAndNewlines)
                 == Self.defaultExternalURL
-                ? "东京 · A573 (LibreSpeed)"
+                ? "洛杉矶 · Sharktech (LibreSpeed)"
                 : "自定义外网节点"
         }
         return "内网自定义节点"

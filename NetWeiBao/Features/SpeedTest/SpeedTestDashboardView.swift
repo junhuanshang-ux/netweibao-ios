@@ -43,7 +43,7 @@ struct SpeedTestDashboardView: View {
                     }
 
                     InlineInfoNote(
-                        text: "外网默认使用第三方 LibreSpeed 东京节点，公共节点可能限速；内网需自建 LibreSpeed。默认下载 100 MB、上传 50 MB，可在节点卡中调节；测速会消耗较多流量。"
+                        text: "外网默认使用第三方 LibreSpeed 洛杉矶 Sharktech 节点，已验证 100 MB 下载与 50 MB 上传；公共节点可能限速。内网需自建 LibreSpeed。测速会消耗较多流量。"
                     )
                     .padding(.horizontal, 2)
                 }
@@ -121,7 +121,7 @@ struct SpeedTestDashboardView: View {
                         Text("默认")
                             .font(.system(size: 9, weight: .medium, design: .rounded))
                             .foregroundStyle(AppTheme.textTertiary)
-                        Text("东京 · A573 (LibreSpeed)")
+                        Text("洛杉矶 · Sharktech (LibreSpeed)")
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(AppTheme.textPrimary)
                     }

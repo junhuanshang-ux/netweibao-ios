@@ -20,7 +20,7 @@
 - 最新 Release：[github.com/junhuanshang-ux/netweibao-ios/releases/latest](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest)
 - 直接下载：[NetWeiBao-unsigned.ipa](https://github.com/junhuanshang-ux/netweibao-ios/releases/latest/download/NetWeiBao-unsigned.ipa)
 - 本地工作区文件：`dist/NetWeiBao-unsigned.ipa`（已加入 `.gitignore`）
-- SHA-256：`843c965473f33cd76969fb1c98ecad5f80cd581aa73319374b5732d4c8f6da39`
+- SHA-256：`b5ba77f011aa5f4cd1aef79f667d4de5351a9e564150f5de60136b298ecbd357`
 
 构建由 GitHub Actions 的 macOS runner 完成，工作流是 [`.github/workflows/build-ipa.yml`](.github/workflows/build-ipa.yml)。手动触发 `Build unsigned IPA` 后，会：
 
@@ -143,10 +143,11 @@ Windows 本地不需要安装 Xcode；构建在 GitHub 的 macOS runner 上完�
 
 ### 内外网测速已实现
 
-- 外网默认节点：**东京 A573 LibreSpeed**（`https://librespeed.a573.net/backend`）。
+- 外网默认节点：**洛杉矶 Sharktech LibreSpeed**（`https://laxspeed.sharktech.net/backend`），已验证 100 MB 下载和 50 MB 上传。
 - **支持中国内节点**：把外网后端地址改成国内 LibreSpeed 的 `.../backend` 即可；国内公共测速站多有限网/反爬，所以没有内置固定地址。
 - 内网：填写自建 LibreSpeed 后端的 `.../backend` 地址，支持 NAS / 路由器 / 电脑。
-- 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载/上传大小可在测速页手动调节。
+- 测试流程：5 次延迟采样 → 默认 100 MB 下载 → 默认 50 MB 上传；下载（10–500 MB）和上传（5–200 MB）可在测速页手动调节。
+- **测速出口固定为系统路由**；首页“切换网卡”不会改变测速结果，只影响 Ping / DHCP / 路由追踪 / 环路 / 风暴。
 - 展示下载/上传 Mbps、平均延迟、抖动、丢包、传输字节与耗时；内网/外网都有结果时显示对比卡。
 - 公共节点可能限速，结果不能直接等同运营商带宽。
 
